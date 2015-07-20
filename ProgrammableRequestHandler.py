@@ -148,7 +148,7 @@ class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
          pass  # Handled means browser and (if necessary)
                # log have been informed
       except Exception as e:
-         giveup( 500, e.message ) 
+         giveup( self, 500, e.message ) 
             
 
     def do_POST(self):
@@ -164,6 +164,6 @@ class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
          pass  # Handled means browser and (if necessary)
                # log have been informed
       except Exception as e:
-         giveup( 500, e.message )
+         giveup( self, 500, e.message )
 
  
