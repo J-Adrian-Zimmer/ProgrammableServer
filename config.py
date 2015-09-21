@@ -40,7 +40,8 @@ else:
 ## SimpleHTTPServer will serve -- it must be 'public'
 ## or the absolute path name of a directory
 
-web_root = 'public'
+# web_root = 'public'
+web_root = 'c:/users/jaz/tmp'
 
 
 ## to defang incomming path names these characters are
@@ -50,11 +51,12 @@ web_root = 'public'
 unwanted_chars = r'\.\.|\s|\\|\:|\(|\)|\[|\]|\{|\}|\)|\(|\?|\#'
 
 
-## upload_dir is where uploads can happen it must be 'upload'
-## or the absolute path name of a directory
+## appDirs lists the application directories, each of which
+## is expected to have expanders, expander_mixins, js, and
+## css subdirs -- the directory containing serve.py 
+## will be appended to the end of this list
 
-upload_dir = 'upload'
-
+appDirs = []
 
 ## ProgrammableHTTPServer is expandable, you can write your
 ## own expanders and expander_mixins.  You can also
@@ -62,4 +64,10 @@ upload_dir = 'upload'
 ## server.py's directory or the subdirectories, expander
 ## and expander_mixin can be imported by the python
 ## write.  See the MIT license for usage rules.
+
+
+## for uploadPic expander
+
+upload_dir = 'c:/users/jaz/tmp'
+
 

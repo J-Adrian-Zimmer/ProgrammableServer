@@ -25,11 +25,6 @@ def _defang_name(name):
   from config import unwanted_chars
   return sub(unwanted_chars,'',name)
 
-def _upload_dir():
-   using('dirs')
-   return os.path.join( serverRoot, 'uploads')
-  
-   
 ## get() and post() ##   
     
 def get():
@@ -37,7 +32,8 @@ def get():
   if path=='/uploadPic': _send_html('')
 
 def post():
-  using('basic', 'upload')
+  dbg('POST')
+  using('basic', 'upload','dirs')
   if path=='/uploadPic':
 
     # possible errors
@@ -50,7 +46,8 @@ def post():
     
     # upload it
     absfile = os.path.join( 
-                _upload_dir(),
+                serviceRoot,
+                'media',
                 _defang_name(upload_filename)
               )
     if upload(absfile):

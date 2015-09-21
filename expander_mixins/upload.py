@@ -50,7 +50,7 @@ def _upload_(upfile,writefilename):
               fo.write(chunk)
        return True
   except Exception as e:
-    dbg( 'From upload.py: ' + e.message )
+    dbg( 'From _upload_ in upload.py: ' + e.message )
     if os.path.exists(writefilename): os.remove(writefilename)
     return False
 

@@ -50,10 +50,12 @@ web_root = 'public'
 unwanted_chars = r'\.\.|\s|\\|\:|\(|\)|\[|\]|\{|\}|\)|\(|\?|\#'
 
 
-## upload_dir is where uploads can happen it must be 'upload'
-## or the absolute path name of a directory
+## appDirs lists the application directories, each of which
+## is expected to have expanders, expander_mixins, js, and
+## css subdirs -- the directory containing serve.py 
+## will be appended to the end of this list
 
-upload_dir = 'upload'
+appDirs = []
 
 
 ## ProgrammableServer is expandable, you can write your

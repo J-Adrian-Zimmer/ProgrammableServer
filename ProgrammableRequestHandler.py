@@ -23,11 +23,10 @@ from os import               listdir
                                # findng expander_mixins
 from os.path import          basename,join
                                # do path manipulation
-from config import           getList,postList
-                               # expander lists
-
-mixin_dir = None    # set in server_init
-expander_dir = None     # set in server_init
+from config import           getList,postList,appDirs
+                               # lists are expander lists
+                               # appDirs has dirs containing
+                               # apps
 
 
 def dbg(message):
@@ -35,9 +34,9 @@ def dbg(message):
    # to see debug output -- dbg is included in
    # expanders and expander mixins
 
-   pass
+   # pass
 
-   # print(message)
+   print(message)
 
 class Handled (Exception): pass
     # because it is caught in do_GET and do_POST this
@@ -61,17 +60,16 @@ def server_init(server,serverRoot,serviceRoot):
    # wrap your BaseHTTPServer instance in this
 
    ## set directories ##
-   global mixin_dir, expander_dir
+   global appDirs
    dbg( "serverRoot=" + serverRoot )
-   mixin_dir = join( serverRoot, 'expander_mixins' )
-   expander_dir = join( serverRoot, 'expanders')
+   appDirs.append(serverRoot)
+   dbg( "appDirs=[" + ','.join(appDirs) + "]" )
   
-   ## get list of mixins ##
-   
    server._MEM = dict(
       want_continue = True,
       serverRoot = serverRoot,
       serviceRoot = serviceRoot,
+      appDirs = appDirs,
       state = {}
    )
 
@@ -79,15 +77,17 @@ def server_init(server,serverRoot,serviceRoot):
 
    return server
 
-def load_mod( handler, namepy, path ):
+def load_mod( handler, namepy, which ):
    # loads a module whose name we don't know at compile
    # time 
    # adds 'using' function to the module
    name = namepy[:-3] 
+   dirs = map( lambda d: join(d,which), appDirs )
+   dbg( "load_mod [" + ','.join(dirs) + '] \n and ' + namepy )
    try:
       fp, pathname, description = imp.find_module(
                          name,
-                         [ path ]
+                         dirs 
                       )
       try:
           m = imp.load_module(
@@ -105,6 +105,8 @@ def load_mod( handler, namepy, path ):
    m.__dict__.update( dict( 
      using =  
        lambda *lst: using(handler,lst,m.__dict__),
+     giveup = 
+       lambda num,msg: giveup(handler,num,msg),
      dbg = dbg
    ) )
    return m
@@ -115,7 +117,7 @@ def loadExpander(handler, expander_name ):
    m = load_mod(
               handler, 
               expander_name+".py", 
-              expander_dir
+              "expanders"
           )
    return m
 
@@ -126,7 +128,7 @@ def loadMixin(handler, mixin_name, where_dict):
       m = load_mod(
                  handler, 
                  mixin_name +".py", 
-                 mixin_dir
+                 "expander_mixins"
       )
       resources = m.getResources(handler)
       handler._MEM[mixin_name] = resources

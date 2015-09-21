@@ -7,9 +7,15 @@ import os
 join = os.path.join
 
 def readFile():
-   serverRoot = handler.server._MEM['serverRoot']
-   path = join( serverRoot, pathparts[-1] )
-   with open(path,'rb') as fi:  return fi.read()
+   using('dirs')
+   for d in appDirs:
+      try:
+         path = join( d, pathparts[-1] )
+         with open(path,'rb') as fi:  return fi.read()
+      except:
+         pass
+   giveup(500,"Cannot load " + pathparts[-1])
+
 
 def get():
   using('parsepath','send')

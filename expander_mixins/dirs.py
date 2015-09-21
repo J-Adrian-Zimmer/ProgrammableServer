@@ -13,7 +13,11 @@ def getResources(handler):
     
     # serviceRoot is the directory from which 
     # SimpleHTTPServer serves,
-    serviceRoot = handler.server._MEM['serviceRoot']
+    serviceRoot = handler.server._MEM['serviceRoot'],
+
+    # appDirs is a list of the application directories
+    appDirs = handler.server._MEM['appDirs'],
+    
 
   )
 

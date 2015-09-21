@@ -30,7 +30,7 @@ if web_root=='public':
                         web_root
                  )  )
 else:
-   serviceRoot = webRoot
+   serviceRoot = web_root
 
 
 if upload_dir!='upload' and not os.path.isdir(upload_dir):
