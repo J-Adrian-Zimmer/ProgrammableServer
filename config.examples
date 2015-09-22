@@ -32,12 +32,11 @@ postList = ['echoHandler',
 
 serverPort = 80
 
+## if debug=0, no output
+##    debug=1, only output from expanderes
+##    debug=2, all output
 
-## threaded is True when the server uses Python threads and 
-## False when it does not
-
-threaded = False
-
+debug = 0
 
 ## The server can set so it only accepts requests from the
 ## same computer (IP: 127.0.0.1), from any computer on

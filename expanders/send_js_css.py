@@ -6,8 +6,14 @@ def get():
   ln2 = len(pathparts)==2
 
   def readFile():
-     p = join(serverRoot, join(pathparts[0],pathparts[-1]))
-     with open(p,'rb') as fi: return fi.read()
+     for d in appDirs:
+        try:
+           path = join( d, pathparts[0], pathparts[-1] )
+           dbg('---trying--- ' + path)
+           with open(path,'rb') as fi:  return fi.read()
+        except:
+           pass
+     giveup(500,"cannot load " + pathparts[-1])
   
   if ln2 and pathparts[0]=='js':
      if pathext=='js':

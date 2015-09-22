@@ -20,23 +20,17 @@ import imp                     # need to import modules
 from SimpleHTTPServer import SimpleHTTPRequestHandler
                                # extending this
 from os import               listdir
-                               # findng expander_mixins
+                               # for findng expander_mixins
 from os.path import          basename,join
                                # do path manipulation
-from config import           getList,postList,appDirs
+from config import           getList,postList,appDirs,debug
                                # lists are expander lists
-                               # appDirs has dirs containing
-                               # apps
+                               # appDirs lists app dirs
 
 
-def dbg(message):
-   # change the comment if you do or do not want
-   # to see debug output -- dbg is included in
-   # expanders and expander mixins
-
-   # pass
-
-   print(message)
+def dbg(message,expanders=False):
+  if debug==2:                 print(message)
+  elif debug==1 and expanders: print(message)
 
 class Handled (Exception): pass
     # because it is caught in do_GET and do_POST this
@@ -49,6 +43,7 @@ def giveup( handler, status, message ):
    # see `error_message_format` in
    # https://docs.python.org/2/library/basehttpserver.html
    # to alter the look of the error screen
+   dbg('giving up! |' + message + '|')
    handler.send_error(status,message)
    raise Handled()
 
@@ -83,7 +78,6 @@ def load_mod( handler, namepy, which ):
    # adds 'using' function to the module
    name = namepy[:-3] 
    dirs = map( lambda d: join(d,which), appDirs )
-   dbg( "load_mod [" + ','.join(dirs) + '] \n and ' + namepy )
    try:
       fp, pathname, description = imp.find_module(
                          name,
@@ -105,15 +99,13 @@ def load_mod( handler, namepy, which ):
    m.__dict__.update( dict( 
      using =  
        lambda *lst: using(handler,lst,m.__dict__),
-     giveup = 
-       lambda num,msg: giveup(handler,num,msg),
-     dbg = dbg
+     dbg = lambda msg: dbg(msg,which=="expanders")
    ) )
    return m
 
 
 def loadExpander(handler, expander_name ):
-   dbg( "LOADING EXPANDER:" + expander_name )
+   dbg( "loading expander: " + expander_name )
    m = load_mod(
               handler, 
               expander_name+".py", 
@@ -133,8 +125,8 @@ def loadMixin(handler, mixin_name, where_dict):
       resources = m.getResources(handler)
       handler._MEM[mixin_name] = resources
    where_dict.update(resources)
-   dbg( 'for ' + mixin_name + ' installed are: ' +
-        ','.join(resources.keys()) )
+   dbg( 'loading mixin: ' + mixin_name )
+   # dbg( ' installed are: ' + ','.join(resources.keys()) )
 
 class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
     

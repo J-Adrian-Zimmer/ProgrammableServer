@@ -36,6 +36,13 @@ else:
    jquery = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" 
 
 
+## if debug=0, no output 
+##    debug=1, only output from expanderes
+##    debug=2, all output
+
+debug = 0
+
+
 ## web_root is the root of the directory tree from which
 ## SimpleHTTPServer will serve -- it must be 'public'
 ## or the absolute path name of a directory

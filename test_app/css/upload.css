@@ -1,0 +1,10 @@
+h1 {
+   display:inline-block;
+}
+
+button {
+   position:relative;
+   top:-7px;
+   left:15px;
+}
+

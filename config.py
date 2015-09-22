@@ -35,6 +35,12 @@ if localServe:
 else:
    jquery = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" 
 
+## if debug=0, no output 
+##    debug=1, only output from expanders
+##    debug=2, all output
+
+debug = 0
+
 
 ## web_root is the root of the directory tree from which
 ## SimpleHTTPServer will serve -- it must be 'public'
@@ -56,7 +62,7 @@ unwanted_chars = r'\.\.|\s|\\|\:|\(|\)|\[|\]|\{|\}|\)|\(|\?|\#'
 ## css subdirs -- the directory containing serve.py 
 ## will be appended to the end of this list
 
-appDirs = []
+appDirs = ['e:/git/ProgrammableServer/test_app']
 
 ## ProgrammableHTTPServer is expandable, you can write your
 ## own expanders and expander_mixins.  You can also

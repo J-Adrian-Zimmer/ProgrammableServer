@@ -16,7 +16,7 @@
 def get():
   using('basic','jsonSupport')  
   if path=='/echo':
-     page_out(
+     ajaxable_page(
          title = 'JSON Example for ProgrammableRequestHandler',
          js = js,
          css = css,

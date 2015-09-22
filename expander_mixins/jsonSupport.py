@@ -10,7 +10,7 @@ the dict's members are
     json_out : sends json response to a POST request
                  argument is a jsonable Python dict
                  (note!! jsonIn:object json_out:dict)
-    page_out : for GET requests
+    ajaxable_page : for GET requests
                  writes a page according to template 
                  below  
                  
@@ -41,11 +41,8 @@ class _Bunch:
    def __init__(self, adict):
         self.__dict__.update(adict)
 
-def _giveup_( handler, status, message ):
-   handler.send_error(status,message)
-   raise handler.Handled()
-
 def getResources(handler):
+   using('send')
   
    def jsonIn():
       try:
@@ -67,54 +64,17 @@ def getResources(handler):
       handler.wfile.write(contents)
       raise handler.Handled
 
-   def page_out(title,css,js,body):
-      from config import jquery
-      page = (_startPage_template % jquery).format(
-                 title = title,
-                 css = css,
-                 js = js,
-                 body = body
-             )
-      handler.send_response(200)
-      handler.send_header("content-type","text/html")
-      handler.send_header(
-          'content-length',
-          len(page.encode('utf-8'))
-      )
-      handler.end_headers()
-      handler.wfile.write(page)
-      raise handler.Handled
+   def ajaxable_page(title,js,css,body):
+      js = '<script src="/js/support.js"></script>\n' + js
+      page_out( title, js, css, body ) 
 
    return dict(
       jsonIn = jsonIn,
       json_out = json_out,
-      page_out = page_out,
-      giveup = lambda s,m: _giveup_(handler,s,m)
+      ajaxable_page = ajaxable_page,
+      giveup = giveup
    )
 
 
-_startPage_template = """
-<!doctype html>
-<!-- generated with Python's string format from a template -->
-<html>
-<head>
-<title>{title}</title>
-
-<!-- css and css generators -->
-{css}
-
-<!-- javascript support -->
-<script src="%s"></script>
-<script src="/js/support.js"></script>
-{js}
-
-</head><body>
-{body}
-</body></html>
-""" 
-
-def console(msg):  # for debugging
-   import sys
-   sys.stderr.write(msg + '\n')
 
 
