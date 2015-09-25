@@ -1,15 +1,17 @@
 import os,sys
 from BaseHTTPServer import HTTPServer
 from inspect import getsourcefile
-from ProgrammableRequestHandler import ProgrammableRequestHandler, server_init
-from config import localServe,web_root,upload_dir
+from ProgrammableRequestHandler import \
+     ProgrammableRequestHandler, server_init
+from config import \
+     localServe,web_root,port,multithreading
 join = os.path.join
 
 ## choose whether local or not ##
-#  use port 80 anyway
  
-server_address = ( ('127.0.0.1',80) if localServe 
-                            else ('0.0.0.0',80) )
+server_address = ( ('127.0.0.1',int(port))  \
+                            if localServe==True
+                            else ('0.0.0.0',int(port)) )
 
 
 ## get serviceRoot and serverRoot right ##
@@ -32,12 +34,13 @@ if web_root=='public':
 else:
    serviceRoot = web_root
 
+## Arrange for multithreading or not ##
 
-if upload_dir!='upload' and not os.path.isdir(upload_dir):
-   raise Exception( 
-   "upload_dir must be 'public' or abs path of a directory"
-   )
-
+if multithreading:
+   from SocketServer import ThreadingMixIn
+   class Server( ThreadingMixIn, HTTPServer ): pass
+else:
+   Server = HTTPServer
 
 # SimpleHTTPServer needs to have serviceRoot current
 os.chdir(serviceRoot)  
@@ -45,16 +48,11 @@ os.chdir(serviceRoot)
 # don't forget we must import stuff from serverRoot
 sys.path.insert(1, serverRoot)
 
-## allow expanders to import from py directory ##
-
-sys.path.insert(1, join(serverRoot,'py') )
-
-
 ## setup the server ##
-#  incl. _MEM['want_continue'] = True
+#  this will establish _MEM['want_continue'] = True
 
 httpd = server_init(
-            HTTPServer(
+            Server(
                server_address, 
                ProgrammableRequestHandler
             ),   
@@ -65,7 +63,7 @@ httpd = server_init(
 
 ## run the server ##
 
-print 'Starting httpd on port '+str(server_address[1])
+print 'Starting httpd on port '+ port
 print '...'
 
 if localServe:
@@ -73,4 +71,6 @@ if localServe:
 else:
    httpd.serve_forever() 
 
+## helper functions
 
+def make_installed_config

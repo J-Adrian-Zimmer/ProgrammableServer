@@ -10,13 +10,16 @@ except:
   print(usage)
   sys.exit(1)
 if os.path.exists(theDir) and not os.path.isdir(theDir):
-   print(usage)
-   sys.exit(1)
+  print(usage)
+  sys.exit(1)
 
 join = os.path.join
 
-def copyfile(name):
-    shutil.copyfile(name,join(theDir,name))
+def copyfile(name,subdir=''):
+  shutil.copyfile(
+            join(subdir,name),
+            join(theDir,subdir,name)
+  )
 
 
 
@@ -26,10 +29,9 @@ os.mkdir( join(theDir,"expanders") )
 os.mkdir( join(theDir,"expander_mixins") )
 os.mkdir( join(theDir,"css") )
 os.mkdir( join(theDir,"js") )
-os.mkdir( join(theDir,"upload") )
-os.mkdir( join(theDir,"public") )
 
-copyfile("config.py")
-copyfile("install.py")
+copyfile("expanderLists.py")
+copyfile("__init__.py","expanders")
+copyfile("__init__.py","expander_mixins")
 
 
