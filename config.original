@@ -6,7 +6,7 @@
 ##    debug=1, only show messages from expanders
 ##    debug=2, show all messages
 
-debug = 2
+debug = 0
 
 
 ## port determines which port the server listens on

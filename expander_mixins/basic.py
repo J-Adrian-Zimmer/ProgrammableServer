@@ -26,13 +26,18 @@ The basic mixin provides
   
       these are put into a page template that includes
         jQuery as defined in config.py
+   
+   handler --  the current request handler
+   
+   Handled --  the exception to raise when a
+               request is handled; send, page_out
+               and giveup all raise Handled
 '''
 
 from urlparse import urlparse
 
 def getResources(handler):
    a,b,path,c,query,fragment = urlparse(handler.path)
-   
    return dict( 
 
       request = path,
@@ -41,13 +46,16 @@ def getResources(handler):
         lambda status, headers, contents:
            _send_(handler,status,headers,contents),
 
-      giveup = lambda status,message: \
-                   _giveup_(handler,status,message),
+      giveup = lambda who,status,message: \
+                   _giveup_(handler,who,status,message),
 
       page_out = 
          lambda title,js,css,body: 
-            _page_out(handler,title,js,css,body)
+            _page_out(handler,title,js,css,body),
    
+      handler = handler,
+      
+      Handled = handler.server.soconsts.Handled
    )
 
 ## helpers ##
@@ -63,27 +71,11 @@ def _send_( handler, status, headers, contents ):
    handler.wfile.write( contents )
    raise handler.Handled()
  
-def _giveup_( handler, status, message ):
-   handler.send_error(status,message)
+def _giveup_( handler, who, status, message ):
+   handler.send_error(status,"\n  " + who + ":\n  " + message)
+   print( who + ' giving up!\n  ' + message)
    raise handler.Handled()
-   def page_out(title,css,js,body):
-      from config import jquery
-      page = (_startPage_template % jquery).format(
-                 title = title,
-                 css = css,
-                 js = js,
-                 body = body
-             )
-      handler.send_response(200)
-      handler.send_header("content-type","text/html")
-      handler.send_header(
-          'content-length',
-          len(page.encode('utf-8'))
-      )
-      handler.end_headers()
-      handler.wfile.write(page)
-      raise handler.Handled
-
+   
 def _page_out(handler,title,js,css,body):
    from config import jquery
    page = (_startPage_template % jquery).format(
@@ -120,7 +112,6 @@ _startPage_template = """
 {body}
 </body></html>
 """ 
-
-   )
+  
    
 

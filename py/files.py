@@ -1,4 +1,4 @@
-import json
+import json,shutil
 
 def read(path):
   try:
@@ -17,7 +17,7 @@ def write(path,string):
 
 def readJSON(path):
   try:
-     return tobytes( json.loads( read(path) ) )
+     return ToObj( tobytes( json.loads( read(path) ) ))
   except:
      return False
 
@@ -27,6 +27,9 @@ def writeJSON(path,jsonstr):
      return True
   except:
      return False
+
+def copyfile(source,dest):
+  shutil.copyfile(source,dest)
 
 def tobytes(obj):
     if isinstance(obj, dict):
@@ -41,3 +44,6 @@ def tobytes(obj):
     else:
         return obj
 
+class ToObj:
+   def __init__(self,dicti):
+       self.__dict__.update(dicti)

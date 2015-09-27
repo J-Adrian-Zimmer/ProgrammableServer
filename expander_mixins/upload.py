@@ -35,7 +35,7 @@ def _get_upload_info(handler):
            )
     return form['upfile']
   except:
-    giveup( 520, _error_msg )
+    giveup( 'upload expander', 520, _error_msg )
 
 def _upload_(upfile,writefilename): 
   # write the file to the upload directory and
@@ -55,7 +55,7 @@ def _upload_(upfile,writefilename):
     return False
 
 def getResources(handler):
-   using("inparameters")
+   using("details")
    if command=='POST':
       ufile = _get_upload_info(handler)
       return dict(

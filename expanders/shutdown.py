@@ -2,8 +2,8 @@
 # see the shutdown mixin
 
 def get():
-   using('basic','shutdown')
-   #  notice multiple mixins; one for handler.path and
-   # one for shutdown()
-   if path=='/shutdown': shutdown() 
+   using('basic')
+   if request=='/shutdown': 
+      handler.server.soconsts.shutdown()
+      raise Handled
 

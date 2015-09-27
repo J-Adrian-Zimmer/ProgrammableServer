@@ -2,7 +2,7 @@
 # information received by the server
 
 def makeResponse():
-   using('inparameters','parsepath','send')
+   using('details', 'basic')
 
    def dictDisplayer( display, item ):
        return display + ( 
@@ -11,7 +11,7 @@ def makeResponse():
 
    html = html_template % dict(
        requesttype = command,
-       pathparts = ', '.join(pathparts),
+       path = ', '.join(path),
        httpstuff = dict_template % (
                       "The HTTP Key/Values",
                       reduce(
@@ -30,7 +30,7 @@ def makeResponse():
                    )
    )                           
   
-   if pathparts[0]=='showRequestParameters': 
+   if path[0]=='showRequestParameters': 
       send(
          200,
          { 'content-type':'text/html; charset=utf-8' },
@@ -57,8 +57,8 @@ html_template = """
 <div id="left">
    <h1>The Request Type</h1>
    <table><tr><td>%(requesttype)s</td></tr></table>
-   <h1>The <code>pathparts</code> array</h1>
-   <table><tr><td>[%(pathparts)s]</td></tr></table>
+   <h1>The <code>path</code> array</h1>
+   <table><tr><td>[%(path)s]</td></tr></table>
    %(querydict)s
 </div>
 <div id="right">

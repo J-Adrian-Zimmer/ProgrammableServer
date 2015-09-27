@@ -2,20 +2,20 @@ import os
 join = os.path.join
 
 def get():
-  using('dirs', 'parsepath','send')
-  ln2 = len(pathparts)==2
+  using('basic', 'orderings', 'details')
+  ln2 = len(path)==2
 
   def readFile():
+     dbg('send_js_css reading: ' + path[-1] + ' from ' + path[0] )
      for d in appDirs:
         try:
-           path = join( d, pathparts[0], pathparts[-1] )
-           dbg('---trying--- ' + path)
-           with open(path,'rb') as fi:  return fi.read()
+           fp = join( d, path[0], path[-1] )
+           with open(fp,'rb') as fi:  return fi.read()
         except:
            pass
-     giveup(500,"cannot load " + pathparts[-1])
+     giveup(500,"cannot load " + path[-1])
   
-  if ln2 and pathparts[0]=='js':
+  if ln2 and path[0]=='js':
      if pathext=='js':
         send(
            200,
@@ -27,7 +27,7 @@ def get():
            404,
            "Expecting a 'js' file"
         )
-  if ln2 and pathparts[0]=='css':
+  if ln2 and path[0]=='css':
      if pathext=='css':
         send(
            200,

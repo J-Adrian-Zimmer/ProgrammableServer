@@ -29,55 +29,15 @@ if( not exists( join( psdir, 'serve.py' ) or
    sys.exit(1)
  
 
+## inform expanderOrdering.py
 
-## initialize list of stuff to copy ## 
+dest_path = join(psdir,'expanderOrdering.json')
+source = files.readJSON('expanderOrdering.json')
+dest   = files.readJSON(dest_path)
 
-from installLists import \
-   getList, postList, jsList, cssList, mixinList
-list = { 'get' : getList,
-         'post' : postList,
-         'js' : jsList,
-         'css' : cssList,
-         'mixins' : mixinList
-       }
-listDirs = { 'get' : 'expanders',
-             'post' : 'expanders',
-             'js' : 'js',
-             'css' : 'css',
-             'mixins' : 'expander_mixins'
-           }
-lists = list.keys()
+dest.getList = source.getList ++ dest.getList
+dest.postList = source.postList ++ dest.postList
+dest.appDirs = dest.appDirs.insert(0,myDir)
 
-
-## maybe copy ##
-
-if -f not in sys.argv: checkDups()
-
-for sd in lists: copyList(sd)
-
-
-## helper functions ##
-
-def copyfile(name,subdir=''):
-    shutil.copyfile(
-              join(mydir,subdir,name),
-              join(psdir,subdir,name)
-    )
-
-def copyList( n ):
-   for f in list[n]: copyfile(f,listDir[n])
-
-def checkDups():
-   dups = []
-   for n in lists:
-      for f in list[n]:
-          p = join(psdir,listDir[n],f)
-          if exists( p ):
-             dups.append(p)
-   if len(dups)>0:
-      print('These files are already installed.' +
-            '  To copy over them, add the -f option.')
-      for p in dups:
-         print("  " + p )
-      sys.exit(1)
+files.writeJSON(dest_path)
 

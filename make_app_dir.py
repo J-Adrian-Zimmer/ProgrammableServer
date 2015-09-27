@@ -3,6 +3,11 @@ usage: make_app_dir <absolute dir path>
 """
 
 import sys, os, shutil
+join = os.path.join
+
+import files
+
+## initialize theDir ##
 
 try:
   theDir = sys.argv[1]
@@ -13,12 +18,7 @@ if os.path.exists(theDir) and not os.path.isdir(theDir):
    print(usage)
    sys.exit(1)
 
-join = os.path.join
-
-def copyfile(name):
-    shutil.copyfile(name,join(theDir,name))
-
-
+## make the directory tree ##
 
 if not os.path.exists(theDir): os.mkdir(theDir)
 
@@ -26,9 +26,27 @@ os.mkdir( join(theDir,"expanders") )
 os.mkdir( join(theDir,"expander_mixins") )
 os.mkdir( join(theDir,"css") )
 os.mkdir( join(theDir,"js") )
-os.mkdir( join(theDir,"py") )
 
-copyfile("config.py")
+## add a few files ##
+
+file.writeJSON(
+      join(theDir,"expanderOrdering.json"),
+      { 'getList':[],
+        'postList':[]
+      }  ) 
+
 copyfile("install.py")
+copyfile("__init__.py","expanders")
+copyfile("__init__.py","expander_mixins")
+
+
+## helpers ##
+
+def copyfile(name,subdir=''):
+    shutil.copyfile(
+              join(subdir,name),
+              join(theDir,subdir,name)
+    )
+
 
 

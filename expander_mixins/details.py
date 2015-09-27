@@ -1,13 +1,18 @@
 '''
 The details mixin provides
 
-   handler --  the current request handler
-   Handled --  the exception to raise when a
-               request is handled
    url_query -- the query part of the url, parsed as a dict
    url_fragment -- the fragment part of the url
    web_root -- the root directory from which 
                SimpleHTTPServer serves
+   server_dir -- the directory serve.py is in
+   localServe --  True, False or the IP number of a local 
+                  netwowrkgateway
+                  
+                  False: requests from anyplace honored
+                  True: only requests from same computer
+                  IP number: requests from same network,
+                     but not the gateway, honored
    path -- an array containing the parts of the 
            url path (each nonempty and with unwanted 
            chars removed)
@@ -20,37 +25,40 @@ DO NOT attempt to change anything here.
 '''
 
 import os, re
-from config import unwanted_chars
 
-from urlparse import parse_qs 
+from urlparse import urlparse, parse_qs 
 
 
 def getResources(handler):
+   using('basic')
    
+   unw = handler.server.soconsts.unwanted_chars
    a,b,pathstr,c,query,fragment = urlparse(handler.path)
    
-   pathts =  filter(
+   path =  filter(
                 lambda x: x!='',
                 map(
-                   lambda x: re.sub(unwanted_chars,'',x),
+                   lambda x: re.sub(unw,'',x),
                    os.path.splitdrive(pathstr)[1].split('/')
                 )
              )
 
-   if len(pathparts)==0:
+   if len(path)==0:
       ext = ''
    else:
-      ext = os.path.splitext(pathparts[-1])[1][1:]
+      ext = os.path.splitext(path[-1])[1][1:]
+
+   cs = handler.server.soconsts
 
    return dict(
       
-      path = paths,
+      path = path,
       pathext = ext,
-      web_root = handler.server.psdata['web_root']
+      web_root = cs.web_root,
+      server_dir = cs.server_dir,
+      localServe = cs.localServe,
       url_query = parse_qs(query),
       url_fragment = fragment,
-      handler = handler,
-      Handled = handler.server.psdata['Handled']
    
    )
 

@@ -1,7 +1,7 @@
 {
-   "getList" : ["shutdown","send_js_cs"],
+   "getList" : ["shutdown","send_js_css"],
    "postList" : [],
-   "appDirs" : [psdir]
+   "appDirs" : []
 }
 
 
