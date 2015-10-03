@@ -4,8 +4,19 @@ usage: make_app_dir <absolute dir path>
 
 import sys, os, shutil
 join = os.path.join
+sys.path.append('py')
 
 import files
+
+## helpers ##
+
+def copyfile(name,subdir=''):
+    shutil.copyfile(
+              join(subdir,name),
+              join(theDir,subdir,name)
+    )
+
+## end helpers ##
 
 ## initialize theDir ##
 
@@ -29,8 +40,8 @@ os.mkdir( join(theDir,"js") )
 
 ## add a few files ##
 
-file.writeJSON(
-      join(theDir,"expanderOrdering.json"),
+files.writeJSON(
+      join(theDir,"expanderOrdering.editable"),
       { 'getList':[],
         'postList':[]
       }  ) 
@@ -38,15 +49,6 @@ file.writeJSON(
 copyfile("install.py")
 copyfile("__init__.py","expanders")
 copyfile("__init__.py","expander_mixins")
-
-
-## helpers ##
-
-def copyfile(name,subdir=''):
-    shutil.copyfile(
-              join(subdir,name),
-              join(theDir,subdir,name)
-    )
 
 
 

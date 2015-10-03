@@ -1,6 +1,0 @@
-{
-   'getList' : [],
-   'postList' : []
-}
-
-

@@ -31,10 +31,13 @@ class makeObj:
 def get_constants():
   import files
   from config import \
-     localServe,web_root,port,multithreading,unwanted_chars
+     localServe,web_root,port,multithreading,\
+     unwanted_chars,debug
 
   jsobj = files.readJSON('expanderOrdering.json')
-  print( "jsobj type:" + jsobj.__class__.__name__ )
+  def _dbg(message): print(message)
+  def no_dbg(message): pass
+
   ## adjust web_root
 
   if web_root!='public' and not os.path.isdir(web_root):
@@ -47,16 +50,30 @@ def get_constants():
                      join( serverRoot, 'public')
                )
 
+  if localServe.__class__.__name__=='bool': 
+     def _no_response(x):
+         return False;
+  else:
+     def _no_response(client_address):
+        # only works for subnet 255.255.255.0 networks
+        # with one gateway
+        a,b = os.path.splitext(localServe)
+        x,y = os.path.splitext(client_address)
+        return a!=b or b==y
+
   ## add serverRoot to appDirs
 
   jsobj.appDirs.append(serverRoot)
 
   return makeObj( 
      shutdown = _shutdown,
+     debug = debug,
+     dbg = _dbg if debug>=1 else no_dbg,
      unwanted_chars = unwanted_chars,
      Handled = Handled,
      
      localServe = localServe,
+     no_response = _no_response,
      port = port,
      multithreading = multithreading,
     
@@ -74,7 +91,7 @@ def check_where_we_are():
    fs = os.listdir(serverRoot)
    if not( 'ProgrammableRequestHandler.py' in fs and
            'serve.py' in fs and
-           'config.original' in fs
+           'config.py' in fs
       ):
      raise Exception(
         "ProgrammableServer's own directory must be current!"
@@ -85,6 +102,7 @@ want_continue = True
 def _shutdown():
   global want_continue
   want_continue = False
+
 
 ## end Helper Functions ##
 

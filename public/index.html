@@ -1,0 +1,57 @@
+<h1 style="text-align:center" id="python-programmable-web-server">Python Programmable Web Server</h1>
+<div style="width:59%; float:left; padding:10px;">
+<p>There is not much you can do with this barebones server.  It is made to have apps plugged into it.  </p>
+<p>Here is a list of what is possible without any customization:</p>
+<ol>
+<li>Get this screen by entering the abbreviated url <code>localhost</code> in your browser.</li>
+<li>Shut the server down by entering <code>localhost/shutdown</code> in your browser.</li>
+<li>See a bird picture by entering <code>localhost/media/wetBird.JPG</code> in your browser.</li>
+<li>Add other things to the <code>public</code> subdirectory so you can see them the way you&#39;ve seen the bird picture.</li>
+</ol>
+<p>A <I>first customization</I> might be to search for
+<code>web_root</code> in the configuration file <code>config.py</code> and set it to a
+different directory.  This directory will become the root of your
+static file service.  The default value of <code>web_root</code> is <code>public</code> which the server sees as a keyword telling it to use the default <code>public</code> subdirectory.  When you replace <code>public</code> be sure to use a full path name.  This  path name can point to anyplace on your computer.</p>
+<p>Note that the original configuration only allows access from
+browsers on the same computer as the server.
+(Hence the use of <code>localhost</code> in the above above urls rather than the
+more normal domain name or possible IP number.)  A <I>second
+customization</I>
+might be to allow access for
+any browser that can reach your server&#39;s computer.  Do this by
+setting <code>localServe</code>
+to <code>False</code>.  
+</p><p>
+If you have a local network with a
+<code>255.255.255.0</code> mask and
+one gateway you can restrict access to browsers on this network by
+assigning the IP/4 number of the gateway to <code>localServe</code>.</p>
+<blockquote>
+<p>If you are unsure what that last sentence means or whether it
+applies to you, don&#39;t try it!
+Accept that your choices are &quot;browsers on the same computer&quot; and
+&quot;any browser that can reach your server&#39;s computer&quot;.</p>
+</blockquote>
+<p>By the way, regardless of how you set <code>localServe</code> the
+<code>shutdown</code> command will only work from a browser on the
+same computer as the server.
+</p>
+<p>A <I>third (and recommended) customization</I> might be to install the demonstration app
+which is located in the <code>demo_app</code> subdirectory.  Install by
+making that directory current and executing <code>install</code>.
+After the installation <code>localhost/aboutdemo</code> will get you started
+trying out the demo.</p>
+<blockquote>
+<p>One way to execute <code>install</code> would be</p>
+<blockquote>
+<p><code>python install.py</code></p>
+</blockquote>
+<p>but you will know how to do it on your machine.</p>
+</blockquote>
+<p>The demonstration app together with its code and comments will be enough for some of you to start building your own applications.  Others may want to buy 
+the displayed ebooklet.  It is available in Kindle format from Amazon and in epub format from many other sources.</p>
+</div>
+<div style="width:39%; float:right;"> <p style="width:100%; margin-top:40px;
+text-align:center;"><img height="600px"
+src="/media/ProgrammableServerCover.jpg" alt="A Simple Programmable
+Web Server for Python"></p></div>

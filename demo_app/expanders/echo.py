@@ -7,15 +7,10 @@
 # echo page.
 
 # The get function serves up the echo page.
-# It gets pathpargs from parsepath and page_out
-# from jsonSupport -- page_out puts out a page
-# with a javascript function send_json which
-# is invoked when the buttons are clicked
-
 
 def get():
-  using('basic','jsonSupport')  
-  if path=='/echo':
+  using('jsonSupport')  
+  if request=='/echo':
      ajaxable_page(
          title = 'JSON Example for ProgrammableRequestHandler',
          js = js,

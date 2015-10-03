@@ -17,13 +17,15 @@ def write(path,string):
 
 def readJSON(path):
   try:
-     return ToObj( tobytes( json.loads( read(path) ) ))
+     return ToObj( tobytes( json.loads( read(path) ) ) )
   except:
      return False
 
-def writeJSON(path,jsonstr):
+def writeJSON(path,jsony):
   try:
-     write(path, json.dumps(jsonstr))
+     if jsony.__class__.__name__=='ToObj':
+        jsony = jsony.__dict__   
+     write(path, json.dumps(jsony))
      return True
   except:
      return False

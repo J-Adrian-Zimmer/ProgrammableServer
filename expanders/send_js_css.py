@@ -2,40 +2,57 @@ import os
 join = os.path.join
 
 def get():
-  using('basic', 'orderings', 'details')
-  ln2 = len(path)==2
-
+  using('out','orderings', 'details')
+  ln2 = len(path)>=2
   def readFile():
-     dbg('send_js_css reading: ' + path[-1] + ' from ' + path[0] )
      for d in appDirs:
         try:
            fp = join( d, path[0], path[-1] )
+           print 'TRYING:' + fp
            with open(fp,'rb') as fi:  return fi.read()
         except:
            pass
-     giveup(500,"cannot load " + path[-1])
-  
-  if ln2 and path[0]=='js':
-     if pathext=='js':
-        send(
-           200,
-           {'content-type':'text/js' },
-           readFile()
-        )
-     else:
-        giveup(
-           404,
-           "Expecting a 'js' file"
-        )
-  if ln2 and path[0]=='css':
-     if pathext=='css':
-        send(
-           200,
-           {'content-type': 'text/css'},
-           readFile()
-        )
-     else:
-        giveup(
-           404,
-           "Expecting a 'css' file"
-        )
+     giveup(
+        'send_js_css 1', 
+        500,
+        "cannot load " + path[-1]
+     )
+ 
+  try:
+     if ln2 and path[0]=='js':
+        if pathext=='js':
+           send(
+              200,
+              {'content-type':'text/js' },
+              readFile()
+           )
+           print 'SENT:' + path[0]
+        else:
+           giveup(
+              'send_js_css 2', 
+              404,
+              "Expecting a 'js' file"
+           )
+     if ln2 and path[0]=='css':
+        if pathext=='css':
+           send(
+              200,
+              {'content-type': 'text/css'},
+              readFile()
+           )
+        else:
+           giveup(
+              'send_js_css 3', 
+              404,
+              "Expecting a 'css' file"
+           )
+  except handler.server.soconsts.Handled:
+     raise Handled()
+  except Exception as e:
+     giveup(
+        'send_js_css 4', 
+        500,
+        e.message
+     )
+     
+       

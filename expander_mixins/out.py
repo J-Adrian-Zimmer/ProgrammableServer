@@ -1,9 +1,5 @@
 '''
-The basic mixin provides
-
-   request -- this is the path part of the request url and 
-              is used by expanders to decide if they want 
-              to handle a request
+The out mixin provides
 
    send -- sends a response when there has been no error
       status -- the http status
@@ -26,21 +22,17 @@ The basic mixin provides
   
       these are put into a page template that includes
         jQuery as defined in config.py
+
+   dbg -- may write its argument on console
+          (see debug in config.py)
    
-   handler --  the current request handler
-   
-   Handled --  the exception to raise when a
-               request is handled; send, page_out
-               and giveup all raise Handled
 '''
 
 from urlparse import urlparse
 
 def getResources(handler):
-   a,b,path,c,query,fragment = urlparse(handler.path)
+   sc = handler.server.soconsts
    return dict( 
-
-      request = path,
 
       send = 
         lambda status, headers, contents:
@@ -53,9 +45,8 @@ def getResources(handler):
          lambda title,js,css,body: 
             _page_out(handler,title,js,css,body),
    
-      handler = handler,
-      
-      Handled = handler.server.soconsts.Handled
+      dbg = sc.dbg
+   
    )
 
 ## helpers ##
@@ -69,12 +60,12 @@ def _send_( handler, status, headers, contents ):
       handler.send_header(k,headers[k])
    handler.end_headers()
    handler.wfile.write( contents )
-   raise handler.Handled()
+   raise Handled()
  
 def _giveup_( handler, who, status, message ):
    handler.send_error(status,"\n  " + who + ":\n  " + message)
    print( who + ' giving up!\n  ' + message)
-   raise handler.Handled()
+   raise Handled()
    
 def _page_out(handler,title,js,css,body):
    from config import jquery
@@ -92,7 +83,7 @@ def _page_out(handler,title,js,css,body):
    )
    handler.end_headers()
    handler.wfile.write(page)
-   raise handler.Handled
+   raise Handled
 
 _startPage_template = """
 <!doctype html>
@@ -100,6 +91,7 @@ _startPage_template = """
 <html>
 <head>
 <title>{title}</title>
+<meta charset="utf-8"/>
 
 <!-- css and css generators -->
 {css}

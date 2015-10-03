@@ -1,13 +1,13 @@
 '''
 The details mixin provides
 
+   command --  GET, POST, HEAD 
    url_query -- the query part of the url, parsed as a dict
-   url_fragment -- the fragment part of the url
    web_root -- the root directory from which 
                SimpleHTTPServer serves
    server_dir -- the directory serve.py is in
    localServe --  True, False or the IP number of a local 
-                  netwowrkgateway
+                  network gateway
                   
                   False: requests from anyplace honored
                   True: only requests from same computer
@@ -16,29 +16,32 @@ The details mixin provides
    path -- an array containing the parts of the 
            url path (each nonempty and with unwanted 
            chars removed)
-        -- the unprocessed url path is in the basic mixin
-           and is called 'request'
    pathext -- the extension found in the path without the .
               (it is also a suffix of path[-1])
+   headers -- http headers from request
 
-DO NOT attempt to change anything here.
+Note:
+ -- the unprocessed url path (sans query & fragment)
+    is always available under the name, request
+ -- the entire parsed url available in handler._MEM
+    (see init_MEM in ProgrammableRequestHandler.py)
 '''
 
 import os, re
 
-from urlparse import urlparse, parse_qs 
+from urlparse import parse_qs 
 
 
 def getResources(handler):
-   using('basic')
-   
-   unw = handler.server.soconsts.unwanted_chars
-   a,b,pathstr,c,query,fragment = urlparse(handler.path)
+   cs = handler.server.soconsts
+   unwanted = cs.unwanted_chars
+   pathstr = handler._MEM['path']
+   query = handler._MEM['query']
    
    path =  filter(
                 lambda x: x!='',
                 map(
-                   lambda x: re.sub(unw,'',x),
+                   lambda x: re.sub(unwanted,'',x),
                    os.path.splitdrive(pathstr)[1].split('/')
                 )
              )
@@ -48,17 +51,17 @@ def getResources(handler):
    else:
       ext = os.path.splitext(path[-1])[1][1:]
 
-   cs = handler.server.soconsts
 
    return dict(
-      
+     
+      command = handler.command, 
       path = path,
       pathext = ext,
       web_root = cs.web_root,
       server_dir = cs.server_dir,
       localServe = cs.localServe,
       url_query = parse_qs(query),
-      url_fragment = fragment,
+      headers = handler._MEM['headers']
    
    )
 

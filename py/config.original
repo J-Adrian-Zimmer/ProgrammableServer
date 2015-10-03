@@ -16,11 +16,14 @@ port = '80'
 ## localServe determines which browsers can expect a response
 ##    localServe = True -- only requests from same computer 
 ##                      -- are honored
-##    localServe = '192.168.1.1'
-##                 -- enter any one gateway on your local net
-##                 -- requests coming from the local net but 
-##                 -- not the gateway are honored
 ##    localServe = False -- any request is honored
+##    localServe = <gateway IP number> 
+##                 -- Use this option only if you have a local
+##                 -- net with netmask 255.255.255.0 and with
+##                 -- just one gateway.
+##                 -- Enter the IP/4 number of the gateway and
+##                 -- requests coming from elsewhere in your
+##                 -- local net will be honored.
 
 localServe = True
 

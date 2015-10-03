@@ -12,9 +12,12 @@
 ## Both jsonIn and json_out are provided by jsonSupport
 
 def post():
-  using('basic','jsonSupport')
-  if path=='/echoHandler':
+  print("POST echoHandler:" + handler.path)
+  #handler.server.soconsts.dbg("POST echoHandler:" + handler.path)
+  using('jsonSupport')
+  if request=='/echoHandler':
      jsn = jsonIn()
+     handler.server.soconsts.dbg("POST 2")
      if jsn.goal=='uppercase':
         json_out( { "text" : jsn.text.upper() } )
      else:

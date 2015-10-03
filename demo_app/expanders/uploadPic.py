@@ -3,7 +3,6 @@ import os
 ## helper functions ##
 
 def _ip_ok(handler):
-    using('basic')
     # reject ip if not local
     # this will not work if there is a proxy server
     # because the proxy is seen as local
@@ -11,7 +10,8 @@ def _ip_ok(handler):
     return ip[:7]=='192.168' or ip[:9]=='127.0.0.1'
 
 def _send_html(message):
-  using('upload','send')
+  print 'UPLOADPIC _send_html'
+  using('upload','out')
   form_template = upload_template % ('pic_form','uploadPic')
   page_out(
        title="Upload A Picture",
@@ -27,13 +27,13 @@ def _defang_name(name):
 ## get() and post() ##   
     
 def get():
-  using('basic')
-  if path=='/uploadPic': _send_html('')
+  handler.server.soconsts.dbg('uploadPic GET')
+  if request=='/uploadPic': _send_html('')
 
 def post():
-  dbg('POST')
-  using('basic', 'upload','dirs')
-  if path=='/uploadPic':
+  handler.server.soconsts.dbg('uploadPic POST')
+  using('upload','details')
+  if request=='/uploadPic':
 
     # possible errors
     if not _ip_ok(handler):
@@ -45,7 +45,7 @@ def post():
     
     # upload it
     absfile = os.path.join( 
-                serviceRoot,
+                web_root,
                 'media',
                 _defang_name(upload_filename)
               )
@@ -59,11 +59,9 @@ def post():
        )
 
 css = """
-<link rel="stylesheet" type="text/css" href="css/upload.css"/>
 """
 
 js = """
-<script src="/js/upload.js"></script>
 """
 
 body = """

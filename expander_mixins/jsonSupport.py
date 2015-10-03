@@ -42,8 +42,7 @@ class _Bunch:
         self.__dict__.update(adict)
 
 def getResources(handler):
-   using('send')
-  
+   using('out')
    def jsonIn():
       try:
         ln = int(handler.headers['content-length'])
@@ -65,9 +64,10 @@ def getResources(handler):
       raise handler.Handled
 
    def ajaxable_page(title,js,css,body):
-      js = '<script src="/js/support.js"></script>\n' + js
+      js = '<script language="javascript" ' +
+           'type="text/javascript" ' +
+           'src="/js/support.js"></script>'
       page_out( title, js, css, body ) 
-
    return dict(
       jsonIn = jsonIn,
       json_out = json_out,

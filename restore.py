@@ -3,42 +3,27 @@ usage: python restore()
        (Execute from the ProgrammableServer dir.)
 '''
 
-import os, shutil, json
+import os, shutil
 
 ## initialize psdir ##
 
 psdir = os.getcwd()
 
-if not exists.( join( myfile, 'install.py' ) ):
-   print(usage)
-   sys.exit(1)
+## restore expanderOrderings.json and config.py ##
 
-## clear all installed stuff ##
+shutil.copyfile(
+    'py/expanderOrdering.original',
+    'expanderOrdering.json'
+)
 
-for d in [ join(psdir,'expanders'),
-           join(psdir,'expander_mixins'),
-           join(psdir,'js'),
-           join(psdir,'css')
-         ]:
-   clearDir(d)
+shutil.copyfile(
+     'py/config.original',
+     'config.py'
+)
 
-with open(join(psdir,'expanderOrdeering.json'), 'w') as fo:
-   fo.write(
-      json.dumps( 
-         {'getList':[], 'putList':[]}
-   )  )
-
-
-## install the basic app ##
-
-os.chdir( join(psdir,'basic_app') )
-execfile('install.py')
-
-
-## helper functions ##
-
-def clearDir(dir):
-   shutil.rmtree(dir)
-   os.mkdir(dir)
-
+print('Restoration complete.')
+print(
+'Warning! Restoration assumed:' +
+'\n  only config.py and expanderOrderings.json have been altered.'
+)
 

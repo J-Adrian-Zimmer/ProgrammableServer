@@ -23,20 +23,19 @@ from os import               listdir
                                # for findng expander_mixins
 from os.path import          basename,join
                                # do path manipulation
-from config import           debug
+# other imports in def dbg and def init_MEM
 
 
-def dbg(message,expanders=False):
-  if debug==2:                 print(message)
-  elif debug==1 and expanders: print(message)
+def dbg(message): pass
+    # maybe redefined in init_MEM
 
-
-def giveup( handler, who, status, message ):
+def giveup( handler, who, status, message, raiseHandled=True ):
    # reports error to browser and console
    msg = who + ' giving up!\n  |' + message + '|'
-   print(msg)
+   print msg
    handler.send_error(status,msg)
-   raise handler.Handled()
+   if raiseHandled:
+      raise (handler.server.soconsts.Handled)()
 
 def using(handler,mixin_tuple,where_dict):
    dbg( 'using: ' + ';'.join(mixin_tuple) )
@@ -47,12 +46,13 @@ def using(handler,mixin_tuple,where_dict):
 def load_mod( handler, namepy, which ):
    # loads a module whose name we don't know at compile
    # time 
-   # adds 'using' function to the module
+   # adds 'using' function to the e
    name = namepy[:-3] 
    dirs = map( 
             lambda d: join(d,which), 
             handler.server.soconsts.appDirs 
           )
+   dbg("loading " + name + ":" + ';'.join(dirs))
    try:
       fp, pathname, description = imp.find_module(
                          name,
@@ -71,11 +71,12 @@ def load_mod( handler, namepy, which ):
          500, 
         'could not load ' + namepy,
       )
-     
    m.__dict__.update( dict( 
      using =  
        lambda *lst: using(handler,lst,m.__dict__),
-     dbg = lambda msg: dbg(msg,which=="expanders")
+     request = handler._MEM['path'],
+     handler = handler,
+     Handled = handler.server.soconsts.Handled
    ) )
    return m
 
@@ -86,7 +87,7 @@ def loadExpander(handler, expander_name ):
               expander_name+".py", 
               "expanders"
           )
-   dbg( "loaded expander: " + expander_name ) 
+   #dbg( "loaded expander: " + expander_name ) 
    return m
 
 def loadMixin(handler, mixin_name, where_dict):
@@ -102,45 +103,81 @@ def loadMixin(handler, mixin_name, where_dict):
       resources = m.getResources(handler)
       mix[mixin_name] = resources
    where_dict.update(resources)
+   #dbg( "loaded expander_mixin: " + mixin_name )
+
+def init_MEM(handler):
+   global dbg
+   if handler.server.soconsts.debug==2:
+      def _dbg(msg): print msg 
+      dbg = _dbg
+   import urlparse
+   
+   scheme,netloc,path,params,query,fragment = \
+                 urlparse.urlparse(handler.path)
+   
+   handler._MEM = { 
+           'mixin':{},
+           'scheme':scheme,
+           'netloc':netloc,
+           'path':path,
+           'params':params,
+           'query':query,
+           'fragment':fragment,
+           'headers':handler.headers
+   }
+   dbg("init_MEM FINISHED")
 
 class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
     
     def do_GET(self):
-      dbg( "\n\n\n\n" + self.path )
-      self._MEM = { 'mixin':{} }
-      self.Handled = self.server.soconsts.Handled
+      if self.server.soconsts.no_response(
+               self.client_address[0][:9]
+      ): return
+      dbg( "GET => " + self.path )
+      init_MEM(self)
       try:
          for n in self.server.soconsts.getList:
             loadExpander(self,n).get()
+         dbg('<<<get')
          SimpleHTTPRequestHandler.do_GET(self)
-      except self.Handled:
+      except self.server.soconsts.Handled:
          pass  # Handled means browser and (if necessary)
                # log have been informed
       except Exception as e:
          giveup( self, 
                  'do_GET (with ' + n + ')', 
                  500, 
-                 e.message
+                 e.message,
+                 False
                )
             
-
     def do_POST(self):
-      dbg( "\n\n\n\n" + self.path )
-      self._MEM = { 'mixin':{} }
-      self.Handled = self.server.soconsts.Handled
+      if self.server.soconsts.no_response(
+               self.client_address[0][:9]
+      ): return
+      init_MEM(self)
+      print "POST => " + self.path
       try:
          for n in self.server.soconsts.postList:
+            print 'STARTING WITH ' + n
             loadExpander(self,n).post()
-         path = self.path.split('?')[0]
-         giveup(self, 404, 'do_POST', path+' not available')
-      except self.Handled:
+            print 'DONE WITH ' + n
+         dbg('<<<post')
+         giveup(
+            self, 
+            'do_POST', 
+            404, 
+            self._MEM['path'] + ' not available'
+         )
+      except self.server.soconsts.Handled:
          pass  # Handled means browser and (if necessary)
                # log have been informed
       except Exception as e:
          giveup( self, 
                  'do_POST (with ' + n + ')', 
                  500, 
-                 e.message
+                 e.message,
+                 False
                )
 
- 
+
