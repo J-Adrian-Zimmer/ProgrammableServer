@@ -64,9 +64,9 @@ def getResources(handler):
       raise handler.Handled
 
    def ajaxable_page(title,js,css,body):
-      js = '<script language="javascript" ' +
-           'type="text/javascript" ' +
-           'src="/js/support.js"></script>'
+      js = ( '<script language="javascript" ' +
+            'type="text/javascript" ' +
+            'src="/js/support.js"></script>' )
       page_out( title, js, css, body ) 
    return dict(
       jsonIn = jsonIn,
