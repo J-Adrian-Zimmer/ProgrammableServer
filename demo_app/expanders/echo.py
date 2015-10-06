@@ -10,32 +10,30 @@
 
 def get():
   using('jsonSupport')  
+  #     jsonSuppor is a mixin found in the server's
+  #     expander_mixin directory
+  #     it supplies ajaxable_page which creates a paage
+  #     with jQuery and the necessary javascxript to run
+  #     jQuery's ajax handler
   if request=='/echo':
      ajaxable_page(
          title = 'JSON Example for ProgrammableRequestHandler',
-         js = js,
-         css = css,
+         cssList = _css,
+         other_part = _other_part,  # inline Javascript
          body = body
      )
 
-
 body = """
-<h4>Enter Text & Play</h4>
+<h2>Enter Text & Choose Upper or Lower Case</h2>
 <p>
-This page is a demonstration of how ProgrammableServer
-handles Ajax communication of JSON objects.  That is why its
+Source code for this demo is at
+<code>demo_app/expanders/echo.py</code> and
+<code>demo_app/expanders/echoHandler.py</code>.
+</p><p>
+This page is a demonstration of how the Programmable Server
+handles AJAX communication of JSON objects.  That is why its
 simple functionality is implemented in the server using Python 
 rather than in the browser using Javascript.  
-</p><p>
-If you lookup the code in these short files, you will
-see how this application is implemented.
-</p>
-<ul>
-<li>config.py</li>
-<li>expanders/echo.py</li>
-<li>expanders/echoHandler.py</li>
-<li>expanders/shutdown.py</li> 
-</ul>
 </p>
 
 <div id='left'>
@@ -50,11 +48,9 @@ see how this application is implemented.
 
 """ 
 
-css = """
-<link rel="stylesheet" type="text/css" href="css/echo.css"/>
-"""
+_css = ["css/echo.css"]
 
-js = """
+_other_part = """
 <script>
 function $id(x) {
    return $('#'+x)

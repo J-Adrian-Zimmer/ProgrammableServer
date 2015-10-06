@@ -2,7 +2,12 @@
 # information received by the server
 
 def makeResponse():
-   using('details','out')
+   using('request','out')
+   #     details and out are mixins available from
+   #     the server's expander_mixin subdirectory
+   #     out provides the send method
+   #     using provides the other identifiers in this
+   #     code that seem to come form nowhere
 
    def dictDisplayer( display, item ):
        return display + ( 
@@ -36,12 +41,11 @@ def makeResponse():
          { 'content-type':'text/html; charset=utf-8' },
          html
       ) 
+   # else the request handler moves to the next GET request
+   # or, if none, to serving a static page through the
+   # SimpleHTTPRequestServer
 
 def get():
-   makeResponse()
-
-
-def post():
    makeResponse()
 
 
@@ -54,6 +58,11 @@ html_template = """
 <!-- css and css generators -->
 <link rel="stylesheet" type="text/css" href="/css/showRequestParameters.css"/>
 </head><body>
+<center><h1>Available Request Details</h1>
+<p>
+Source code for this demo is found in
+'demo_app/expanders/showRequestParameter.py`.
+</p></center>
 <div id="left">
    <h1>The Request Type</h1>
    <table><tr><td>%(requesttype)s</td></tr></table>

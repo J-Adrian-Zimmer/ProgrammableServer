@@ -56,7 +56,7 @@ def _upload_(upfile,writefilename):
 
 def getResources(handler):
    handler.server.soconsts.dbg('UPLOAD 1')
-   using("details")
+   using("config","request")
    if command=='POST':
       handler.server.soconsts.dbg('UPLOAD 2')
       ufile = _get_upload_info(handler)

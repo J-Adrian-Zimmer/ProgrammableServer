@@ -12,12 +12,13 @@ the dict's members are
                  (note!! jsonIn:object json_out:dict)
     ajaxable_page : for GET requests
                  writes a page according to template 
-                 below  
+                 below (defaults shown) 
                  
                  write_page arguments:
                      title =
-                     js =
-                     css =
+                     jsList = []
+                     cssList = []
+                     other_head = ''
                      body =
 
                template includes jQuery and a Javascript 
@@ -63,11 +64,16 @@ def getResources(handler):
       handler.wfile.write(contents)
       raise handler.Handled
 
-   def ajaxable_page(title,js,css,body):
-      js = ( '<script language="javascript" ' +
-            'type="text/javascript" ' +
-            'src="/js/support.js"></script>' )
-      page_out( title, js, css, body ) 
+   def ajaxable_page(
+      title='anonymous',
+      jsList=[],
+      cssList=[],
+      other_part='',
+      body=''
+   ):
+      jsList = jsList + ["js/support.js"]
+      page_out( title, jsList, cssList, other_part, body ) 
+
    return dict(
       jsonIn = jsonIn,
       json_out = json_out,

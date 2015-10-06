@@ -2,13 +2,12 @@ import os
 join = os.path.join
 
 def get():
-  using('out','orderings', 'details')
+  using('out','orderings', 'request')
   ln2 = len(path)>=2
   def readFile():
      for d in appDirs:
         try:
            fp = join( d, path[0], path[-1] )
-           print 'TRYING:' + fp
            with open(fp,'rb') as fi:  return fi.read()
         except:
            pass
@@ -26,7 +25,6 @@ def get():
               {'content-type':'text/js' },
               readFile()
            )
-           print 'SENT:' + path[0]
         else:
            giveup(
               'send_js_css 2', 

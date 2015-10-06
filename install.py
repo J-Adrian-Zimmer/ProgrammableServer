@@ -1,12 +1,12 @@
 usage = """
   python install.py programmable_server_dir
   
-  Note current dir must be an app dir for
-   the Programmable Server.
+  Note current dir must be the dir for
+   the app being installed.
 
-  If programmable_server_dir is omitted
-   it is assumed to be the super dir of
-   the current dir.
+  You can omit programmable_server_dir.
+   If you do the it is assumed to be the 
+   super dir of the current dir.
 """
 
 import os, sys, shutil

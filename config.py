@@ -32,7 +32,7 @@ localServe = True
 ## (default depends on localServe)
 
 if localServe!=False:
-   jquery = "/js/jquery.min.js"
+   jquery = "js/jquery.min.js"
 else:
    jquery = \
    "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" 

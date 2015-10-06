@@ -10,29 +10,37 @@ def _ip_ok(handler):
     return ip[:7]=='192.168' or ip[:9]=='127.0.0.1'
 
 def _send_html(message):
-  print 'UPLOADPIC _send_html'
   using('upload','out')
+  #      upload and out are mixins found in the server's
+  #      expander_mixin subdirectory
+  #      upload provides upload_template
+  #      out provides page_out
   form_template = upload_template % ('pic_form','uploadPic')
   page_out(
        title="Upload A Picture",
-       js = js,
-       css=css,
        body= body % (form_template,message)
   )
 def _defang_name(name):
   from re import sub
-  from config import unwanted_chars
   return sub(unwanted_chars,'',name)
 
 ## get() and post() ##   
     
 def get():
-  handler.server.soconsts.dbg('uploadPic GET')
+  # invoked for get requests, rejects those which are 
+  # not for uploadPic
+
   if request=='/uploadPic': _send_html('')
 
 def post():
-  handler.server.soconsts.dbg('uploadPic POST')
-  using('upload','details')
+  # invoked for POST requests, rejects those which
+  # are not for uploadPic
+
+  using('upload','config')
+  #     upload is a mixin found in the server's
+  #     expander_mixin subdirectory; it provides
+  #     upload and upload_ext
+
   if request=='/uploadPic':
 
     # possible errors
@@ -58,14 +66,11 @@ def post():
          'Could not upload '+_defang_name(upload_filename)
        )
 
-css = """
-"""
-
-js = """
-"""
-
 body = """
-   <h1>Upload A Picture</h1>  <button>Day/Night</button>
+   <h1>Upload A Picture</h1>  
+   <p>Source code for this app is found in
+   <code>demo_app\expanders\uploadPic</code>.
+   </p>
    <div>%s</div>
    <p>This will upload a JPG picture to the media subdirectory, 
    provided you are working from a local network.</p>
