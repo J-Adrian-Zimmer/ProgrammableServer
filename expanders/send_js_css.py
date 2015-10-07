@@ -22,7 +22,9 @@ def get():
         if pathext=='js':
            send(
               200,
-              {'content-type':'text/js' },
+              {'content-type':'text/js',
+               'cache-control':'max-age=10,must-revalidate'
+              },
               readFile()
            )
         else:
@@ -35,7 +37,9 @@ def get():
         if pathext=='css':
            send(
               200,
-              {'content-type': 'text/css'},
+              {'content-type': 'text/css',
+               'cache-control':'max-age=10,must-revalidate'
+              },
               readFile()
            )
         else:

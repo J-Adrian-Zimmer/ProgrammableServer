@@ -62,7 +62,7 @@ def getResources(handler):
       )
       handler.end_headers()
       handler.wfile.write(contents)
-      raise handler.Handled
+      raise Handled
 
    def ajaxable_page(
       title='anonymous',

@@ -135,8 +135,7 @@ _startPage_template = """
 """ 
    
 _js_template = """
-<script language="javascript" type="text/javascript" src="%s">
-</script>
+<script language="javascript" type="text/javascript" src="%s"></script>
 """
 
 _css_template = """
