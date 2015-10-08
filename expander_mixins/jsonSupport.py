@@ -61,7 +61,9 @@ def getResources(handler):
           len(contents.encode('utf-8'))
       )
       handler.end_headers()
+      print "THREE: " + contents[0:60] + "END THREE"
       handler.wfile.write(contents)
+      print "FOUR"
       raise Handled
 
    def ajaxable_page(

@@ -50,7 +50,7 @@ web_root = 'public'
 
 ## multithreading
 
-multithreading = True
+multithreading = False
 
 
 ## to defang incomming path names these characters are

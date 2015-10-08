@@ -20,6 +20,7 @@ def get():
   try:
      if ln2 and path[0]=='js':
         if pathext=='js':
+           print 'JS:' + '/'.join(path)
            send(
               200,
               {'content-type':'text/js',
@@ -35,6 +36,7 @@ def get():
            )
      if ln2 and path[0]=='css':
         if pathext=='css':
+           print 'CSS:' + '/'.join(path)
            send(
               200,
               {'content-type': 'text/css',
@@ -49,6 +51,7 @@ def get():
               "Expecting a 'css' file"
            )
   except handler.server.soconsts.Handled:
+     print 'HANDLED: send_js_css: ' + ';'.join(path)
      raise Handled()
   except Exception as e:
      giveup(
