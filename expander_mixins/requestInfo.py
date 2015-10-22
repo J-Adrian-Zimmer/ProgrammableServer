@@ -1,5 +1,5 @@
 '''
-The request mixin provides
+The requestInfo mixin provides
 
    command --  GET, POST, HEAD 
    path -- an array containing the parts of the 
@@ -12,9 +12,10 @@ The request mixin provides
 
 Note:
  -- the unprocessed url path (sans query & fragment)
-    is always available under the name, request
- -- the entire parsed url available in handler._MEM
-    (see init_MEM in ProgrammableRequestHandler.py)
+    is always available with the 'request' identifier
+ -- search for init_MEM in ProgrammableHandler.py
+    to see how to get the results of standared Python
+    parsing of the URL
 '''
 
 import os, re
@@ -22,7 +23,7 @@ import os, re
 from urlparse import parse_qs 
 
 
-def getResources(handler):
+def getResources():
    cs = handler.server.soconsts
    unwanted = cs.unwanted_chars
    pathstr = handler._MEM['path']

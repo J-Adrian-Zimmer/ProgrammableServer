@@ -1,27 +1,35 @@
-# This code and that in echoHandler.py demonstrate 
-# how objects can be sent to the server and back.
-# When the buttons are clicked, an object with the
-# textarea text and a goal ('uppercase' or 'lowercase')
-# is sent to this way.  The server runs echoHandler
-# to convert the text and send it back to this 
-# echo page.
+'''
+This code and that in echoHandler.py demonstrate how
+objects can be sent to the server and back.
 
-# The get function serves up the echo page.
+When the buttons are clicked, an object with the
+textarea text and a goal ('uppercase' or 'lowercase')
+is sent to the server.
+
+This is possible because the ajaxable_page method formats
+a page which loads a support.js file.  This Javascript
+file has a method json_out that sends a string formated
+as a JSON object to the server using jQuery's support for
+Ajax transfers.
+
+Most of ajaxable_out's behavior comes from the page_out
+function in the out mixin.
+'''
 
 def get():
-  using('jsonSupport')  
-  #     jsonSuppor is a mixin found in the server's
-  #     expander_mixin directory
-  #     it supplies ajaxable_page which creates a paage
-  #     with jQuery and the necessary javascxript to run
-  #     jQuery's ajax handler
   if request=='/echo':
+     print 'I-0'
+     mixins('jsonSupport')  # for ajaxable_page
+          # jsonSupport.py is found in expander_mixins
+     print 'I-1'
      ajaxable_page(
-         title = 'JSON Example for ProgrammableRequestHandler',
+         title = 'Ajax & JSON Exampler',
          cssList = _css,
-         other_part = _other_part,  # inline Javascript
+         other_part = _other_part,  
+                      # happens to be inline Javascript
          body = body
      )
+     print 'II-2'
 
 body = """
 <h2>Enter Text & Choose Upper or Lower Case</h2>
@@ -48,10 +56,18 @@ rather than in the browser using Javascript.
 
 """ 
 
-_css = ["css/echo.css"]
+_css = ["echo.css"]
 
 _other_part = """
-<script>
+<script> 
+
+/* 
+this script could have been loaded from a file with
+ajaxable_out's jsList parameter.   Merely showing
+another possibility here.   jQuery is loaded automatically
+by both page_out and ajaxable_out.  See the config.py file.
+*/
+
 function $id(x) {
    return $('#'+x)
 }

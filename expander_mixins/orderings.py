@@ -2,7 +2,7 @@
 The orderings mixin provides the lists from expanderOrderings.json
 '''
 
-def getResources(handler):
+def getResources():
    cs = handler.server.soconsts
    return dict (
        getList = cs.getList,

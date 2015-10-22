@@ -1,35 +1,17 @@
 '''
-The jsonSupport mixin is a set of support functions for 
-applications that use ajax and json to communicate 
-between existing web pages and the server
+   The jsonSupport mixin is much like the out mixin but
+   subtracts the send function and adds others supporting
+   applications that use Ajax and JSON to communicate.
+   Has these functions
 
-the dict's members are
-
-    jsonIn : gets the json sent in a POST request
-                      json represented as Python object
-    json_out : sends json response to a POST request
-                 argument is a jsonable Python dict
-                 (note!! jsonIn:object json_out:dict)
-    ajaxable_page : for GET requests
-                 writes a page according to template 
-                 below (defaults shown) 
-                 
-                 write_page arguments:
-                     title =
-                     jsList = []
-                     cssList = []
-                     other_head = ''
-                     body =
-
-               template includes jQuery and a Javascript 
-               json_out function whose arguments are
-                     json-able object
-                     callback for processing response
-                     
-               the callback's single argument is
-                     a javascript object representation 
-                     of a json
-
+      jsonIn --  for a POST request response to Ajax
+                 Python object is obtained
+      json_out -- for a POST request response to Ajzx
+                 send a Ajaxable Pyton object or dict
+      ajaxable_page -- like out's page_out but adds 
+                    Javascript for sending a JSONable
+                    Javascript object via Ajax
+      giveup -- the give from the out mixin
 '''
 
 import os, json
@@ -42,8 +24,8 @@ class _Bunch:
    def __init__(self, adict):
         self.__dict__.update(adict)
 
-def getResources(handler):
-   using('out')
+def getResources():
+   mixins('out')  # for page_out and giveup
    def jsonIn():
       try:
         ln = int(handler.headers['content-length'])
@@ -53,7 +35,10 @@ def getResources(handler):
       return _Bunch(json.loads(content))
 
    def json_out(jsonable):
-      contents = json.dumps(jsonable)
+      contents = ( json.dumps(jsonable.__dict__) if 
+             type(jsonable).__name__=='instance' else
+                            json.dumps(jsonable) 
+      )
       handler.send_response(200)
       handler.send_header("Content-Type","text/plain")
       handler.send_header(
@@ -61,9 +46,7 @@ def getResources(handler):
           len(contents.encode('utf-8'))
       )
       handler.end_headers()
-      print "THREE: " + contents[0:60] + "END THREE"
       handler.wfile.write(contents)
-      print "FOUR"
       raise Handled
 
    def ajaxable_page(

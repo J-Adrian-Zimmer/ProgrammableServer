@@ -25,14 +25,11 @@ The out mixin provides
       these are put into a page template that includes
         jQuery as defined in config.py
 
-   dbg -- may write its argument on console
-          (see debug in config.py)
-   
 '''
 
 from urlparse import urlparse
 
-def getResources(handler):
+def getResources():
    sc = handler.server.soconsts
    return dict( 
 
@@ -56,11 +53,38 @@ def getResources(handler):
                                 other_part,
                                 body
                            )
-                 ),
-   
-      dbg = sc.dbg
+                 )
    
    )
+
+def _page_out(handler,title,jsL,cssL,otherH,body):
+   from config import jquery
+   js = ''.join(
+             map( 
+              lambda x: _js_template % x, 
+              [jquery] + jsL  
+           ))
+   css = ''.join(
+             map( 
+              lambda x: _css_template % x, 
+              cssL 
+          ))
+   page = (_startPage_template.format(
+              title = title,
+              js = js,
+              css = css,
+              other_head = otherH,
+              body = body
+          ))
+   handler.send_response(200)
+   handler.send_header("content-type","text/html")
+   handler.send_header(
+       'content-length',
+       len(page.encode('utf-8'))
+   )
+   handler.end_headers()
+   handler.wfile.write(page)
+   raise Handled
 
 ## helpers ##
 
@@ -111,7 +135,6 @@ def _page_out(handler,title,jsL,cssL,otherH,body):
    handler.end_headers()
    handler.wfile.write(page)
    raise Handled
-
 _startPage_template = """
 <!doctype html>
 <!-- generated with Python's string format from a template -->
@@ -135,11 +158,11 @@ _startPage_template = """
 """ 
    
 _js_template = """
-<script language="javascript" type="text/javascript" src="%s"></script>
+<script language="javascript" type="text/javascript" src="/js/%s"></script>
 """
 
 _css_template = """
-<link rel="stylesheet" type="text/css" href="%s"/>
+<link rel="stylesheet" type="text/css" href="/css/%s"/>
 """
  
 

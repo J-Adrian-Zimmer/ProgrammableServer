@@ -1,69 +1,72 @@
+'''
+  The uploadPic expander uses an HTML form to upload 
+  a picture to web_root/media.  The picture must be
+  a jpg and the browser must be on the same computer
+  as the server
+'''
+
 import os
 
 ## helper functions ##
 
-def _ip_ok(handler):
-    # reject ip if not local
-    # this will not work if there is a proxy server
-    # because the proxy is seen as local
-    ip = handler.client_address[0]
-    return ip[:7]=='192.168' or ip[:9]=='127.0.0.1'
-
 def _send_html(message):
-  using('upload','out')
-  #      upload and out are mixins found in the server's
-  #      expander_mixin subdirectory
-  #      upload provides upload_template
-  #      out provides page_out
-  form_template = upload_template % ('pic_form','uploadPic')
-  page_out(
+  up = unmixed('upload')
+  out = unmixed('out')
+       # like using( 'upload','out' ) but makes the up and
+       # out variables reference the expander_mixins 
+       # rather than mixing it into the local namespace
+  form_template = up.upload_template % ('pic_form','uploadPic')
+  out.page_out(
        title="Upload A Picture",
        body= body % (form_template,message)
   )
-def _defang_name(name):
+
+def _defang_name(handler,name):
   from re import sub
-  return sub(unwanted_chars,'',name)
+  uwc = handler.server.soconsts.unwanted_chars
+  name = os.path.basename(name)
+  return sub(uwc,'',name)
 
 ## get() and post() ##   
     
 def get():
   # invoked for get requests, rejects those which are 
   # not for uploadPic
-
   if request=='/uploadPic': _send_html('')
 
 def post():
   # invoked for POST requests, rejects those which
   # are not for uploadPic
-
-  using('upload','config')
-  #     upload is a mixin found in the server's
-  #     expander_mixin subdirectory; it provides
-  #     upload and upload_ext
-
   if request=='/uploadPic':
 
-    # possible errors
-    if not _ip_ok(handler):
+    mixins(
+          'upload',  # for upload_ext and upload
+          'network'  # for me
+          # see expander_mixins
+         )
+
+    if not me():
        _send_html(
-         "Only accepting requests from local network."
+         "Only accepting requests from same computer."
        )
     if upload_ext.lower()!='jpg':
         _send_html( "only accepting jpg files" )
     
     # upload it
+    defanged = _defang_name(handler,upload_filename)
     absfile = os.path.join( 
-                web_root,
+                handler.server.soconsts.web_root,
                 'media',
-                _defang_name(upload_filename)
+                defanged
               )
     if upload(absfile):
        _send_html(
-          'Upload OK.  Find picture at ' + absfile 
+          'Upload OK.  Find picture at media/' + defanged
        )
     else:
        _send_html(
-         'Could not upload '+_defang_name(upload_filename)
+         'Could not upload '+ 
+         os.path.normpath(absfile)
        )
 
 body = """

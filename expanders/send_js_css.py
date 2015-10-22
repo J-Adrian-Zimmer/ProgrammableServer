@@ -2,7 +2,11 @@ import os
 join = os.path.join
 
 def get():
-  using('out','orderings', 'request')
+  mixins(
+         'out',         # for send and giveup
+         'orderings',   # for appDirs
+         'requestInfo'  # for appDirs, path, and pathext
+      )
   ln2 = len(path)>=2
   def readFile():
      for d in appDirs:
@@ -20,7 +24,6 @@ def get():
   try:
      if ln2 and path[0]=='js':
         if pathext=='js':
-           print 'JS:' + '/'.join(path)
            send(
               200,
               {'content-type':'text/js',
@@ -36,7 +39,6 @@ def get():
            )
      if ln2 and path[0]=='css':
         if pathext=='css':
-           print 'CSS:' + '/'.join(path)
            send(
               200,
               {'content-type': 'text/css',
@@ -51,7 +53,6 @@ def get():
               "Expecting a 'css' file"
            )
   except handler.server.soconsts.Handled:
-     print 'HANDLED: send_js_css: ' + ';'.join(path)
      raise Handled()
   except Exception as e:
      giveup(

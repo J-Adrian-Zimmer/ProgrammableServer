@@ -1,6 +1,7 @@
 <h1 style="text-align:center" id="python-programmable-web-server">Python Programmable Web Server</h1>
 <div style="width:59%; float:left; padding:10px;">
-<p>The <a href="https://github.com/J-Adrian_Zimmer/">Programmable
+<p>The <a
+href="https://github.com/J-Adrian-Zimmer/ProgrammableServer">Programmable
 Server</a> is Python-based and bare bones.  It is made to have apps plugged into it.  </p>
 <p>Here is a list of what is possible without any customization:</p>
 <ol>
@@ -15,17 +16,19 @@ different directory.  This directory will become the root of your
 static file service.  The default value of <code>web_root</code> is <code>public</code> which the server sees as a keyword telling it to use the default <code>public</code> subdirectory.  When you replace <code>public</code> be sure to use a full path name.  This  path name can point to anyplace on your computer.</p>
 <p>Note that the original configuration only allows access from
 browsers on the same computer as the server.
-(Hence the use of <code>localhost</code> in the above above urls rather than the
-more normal domain name or possible IP number.)  A <I>second
+(Hence the use of <code>localhost</code> in the above URLs.  It
+would be more normal to use a  
+domain name or possibly a IP number.)  A <I>second
 customization</I>
 might be to allow access for
 any browser that can reach your server&#39;s computer.  Do this by
 setting <code>localServe</code>
-to <code>False</code>.  
+to <code>False</code>.   If this doesn't work have a look at your
+computer's firewall.
 </p><p>
 If you have a local network with a
 <code>255.255.255.0</code> mask and
-one gateway you can restrict access to browsers on this network by
+one gateway, then you can restrict access to browsers on this network by
 assigning the IP/4 number of the gateway to <code>localServe</code>.</p>
 <blockquote>
 <p>If you are unsure what that last sentence means or whether it
@@ -37,8 +40,8 @@ Accept that your choices are &quot;browsers on the same computer&quot; and
 <code>shutdown</code> command will only work from a browser on the
 same computer as the server.
 </p>
-<p>A <I>third (and recommended) customization</I> might be to install the 
-<a href="https://github.com/J-Adrian-Zimmer/">demonstration app</a>
+<p>A <I>third customization</I> might be to install the 
+<a href="about_demo.html">demonstration app</a>
 which is located in the <code>demo_app</code> subdirectory.
 </p><p>
 The demonstration app together with its code and comments will be enough for some of you to start building your own applications.  Others may want to buy 

@@ -1,4 +1,6 @@
-'''
+"""
+  if message[:9] == "Could not":
+     raise Handled() 
 The upload mixin provides some html for a file form to GET requests.
 
 For POST requests it also provides a method to receive uploaded
@@ -13,9 +15,9 @@ is given in a template which you can adapt.  Use it this way
 
 where id is an id you can reference in css and the action url
 lets you decide which expander will respond to the upload.
-'''
+"""
 
-import os, cgi
+import os,cgi
 
 _error_msg = """ There has been a problem with the upload mixin.
 Whether the problem was included in the HTML sent to the 
@@ -35,11 +37,15 @@ def _get_upload_info(handler):
            )
     return form['upfile']
   except:
-    giveup( 'upload expander', 520, _error_msg )
+    # get giveup and apply it
+    (unmixed('out')).giveup( 
+        'upload expander', 520, _error_msg
+    )
 
 def _upload_(upfile,writefilename): 
   # write the file to the upload directory and
   # return a success boolean
+
   try: 
     with open(writefilename, 'wb') as fo:
        while True:
@@ -50,15 +56,12 @@ def _upload_(upfile,writefilename):
               fo.write(chunk)
        return True
   except Exception as e:
-    dbg( 'From _upload_ in upload.py: ' + e.message )
     if os.path.exists(writefilename): os.remove(writefilename)
     return False
 
-def getResources(handler):
-   handler.server.soconsts.dbg('UPLOAD 1')
-   using("config","request")
+def getResources():
+   mixins("requestInfo")
    if command=='POST':
-      handler.server.soconsts.dbg('UPLOAD 2')
       ufile = _get_upload_info(handler)
       return dict(
         
@@ -75,9 +78,7 @@ def getResources(handler):
 
          # upload a file and store it in the upload directory
          # using the basename of the argument
-         upload = (
-            lambda writename: _upload_(ufile,writename)
-         )
+         upload = lambda writename: _upload_(ufile,writename)
       
       )
    else:
@@ -96,4 +97,5 @@ template = """
 <input type="file" name="upfile"> <input type="submit" value="upload">
 </form>
 """
+
 

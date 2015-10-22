@@ -32,7 +32,7 @@ localServe = True
 ## (default depends on localServe)
 
 if localServe!=False:
-   jquery = "js/jquery.min.js"
+   jquery = "/js/jquery.min.js"
 else:
    jquery = \
    "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" 
@@ -43,15 +43,22 @@ else:
 
 ## web_root is the root of the directory tree from which
 ## SimpleHTTPServer will serve -- it must be 'public'
-## or the absolute path name of a directory
+## or the absolute path name of a directory.  Windows
+## users: use '/' instead of '\' when writing the 
+## absolute path name.  
 
 web_root = 'public'
 
+## this controls whether a request for a directory without a
+## index.html file will cause a list of files therein
+## (note that the only file that can be served in lieu
+##  of a directory listing is index.html -- not index.htm)
 
-## multithreading
+listDir = True
 
-multithreading = False
+## this controls whether the shutdown command will work 
 
+shutdown = True
 
 ## to defang incomming path names these characters are
 ## often removed from all components -- written as a regular

@@ -1,53 +1,49 @@
 #  response is a page that shows the path, query, and http
 # information received by the server
 
-def makeResponse():
-   using('request','out')
-   #     details and out are mixins available from
-   #     the server's expander_mixin subdirectory
-   #     out provides the send method
-   #     using provides the other identifiers in this
-   #     code that seem to come form nowhere
-
-   def dictDisplayer( display, item ):
-       return display + ( 
-           "<tr><td>%s</td><td>%s</td></tr>" % item
-       )
-
-   html = html_template % dict(
-       requesttype = command,
-       path = ', '.join(path),
-       httpstuff = dict_template % (
-                      "The HTTP Key/Values",
-                      reduce(
-                         dictDisplayer,
-                         headers.items(),
-                         ''
-                      )
-                   ),
-       querydict = dict_template % (
-                      "URL Query as Key/Values Pairs",
-                      reduce(
-                         dictDisplayer,
-                         url_query.items(),
-                         ''
-                      )
-                   )
-   )                           
-  
-   if len(path)>0 and path[0]=='showRequestParameters': 
-      send(
-         200,
-         { 'content-type':'text/html; charset=utf-8' },
-         html
-      ) 
-   # else the request handler moves to the next GET request
-   # or, if none, to serving a static page through the
-   # SimpleHTTPRequestServer
-
 def get():
-   makeResponse()
 
+   if request[:22]=='/showRequestParameters':
+      # could use path=='showRequestParameters' (if
+      # mixins loaded before the if)
+      # but then mixins might unnecessarily be loaded
+      mixins(
+         'requestInfo',  # for path, headers, url_query, 
+         'out'    # for send
+      )  # requestInfo and out are found in expander_mixins
+
+      def dictDisplayer( display, item ):
+          return display + ( 
+              "<tr><td>%s</td><td>%s</td></tr>" % item
+          )
+
+      html = html_template % dict(
+          requesttype = command,
+          path = ', '.join(path),
+          httpstuff = dict_template % (
+                         "The HTTP Key/Values",
+                         reduce(
+                            dictDisplayer,
+                            headers.items(),
+                            ''
+                         )
+                      ),
+          querydict = dict_template % (
+                         "URL Query as Key/Values Pairs",
+                         reduce(
+                            dictDisplayer,
+                            url_query.items(),
+                            ''
+                         )
+                      )
+      )                           
+     
+      if len(path)>0 and path[0]=='showRequestParameters': 
+         send(
+            200,
+            { 'content-type':'text/html; charset=utf-8' },
+            html
+         ) 
 
 html_template = """
 <!doctype html>

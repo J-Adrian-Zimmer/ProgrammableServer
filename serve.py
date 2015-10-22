@@ -1,10 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: latin-1 -*-
+
+# Running Python from $PATH, it had better be Python 2.7.x
+
 ''' 
 run server.py from the directory you found it in
 
 configure it by editing config.py
 
-restore default configurations by copying
-  config.original to config.py
+restore default configurations running restore.py
 
 install apps by running install.py from
   the directory that contains  the app
@@ -19,63 +23,70 @@ from ProgrammableRequestHandler import \
 join = os.path.join
 
 class Handled (Exception): pass
-    # because it is caught in do_GET and do_POST this
-    # exception stops handler when handling is done
+    # this exception stops ProgrammableRequestHandler
+    # from trying more expanders
 
-## helpers  ##
+## helpers ##
 
 class makeObj:
    def __init__(self, **kwds ):
         self.__dict__.update(**kwds)
 
 def get_constants():
-  import files
-  from config import \
-     localServe,web_root,port,multithreading,\
-     unwanted_chars,debug
+  import files, config
 
   jsobj = files.readJSON('expanderOrdering.json')
-  def _dbg(message): print(message)
-  def no_dbg(message): pass
 
-  ## adjust web_root
+  if config.localServe.__class__.__name__=='bool': 
+    def _no_response(forget_it):
+         return config.localServe.__class__.__name__
 
-  if web_root!='public' and not os.path.isdir(web_root):
-    raise Exception( 
-     "web_root must be 'public' or abs path of a directory"
-    )
+  else:
+    def _no_response(client_address):
+        # only works for subnet 255.255.255.0 networks
+        # with one gateway
+        a,b = os.path.splitext(config.localServe)
+        x,y = os.path.splitext(client_address)
+        print "client_address=" + client_address
+        return (client_address!='127.0.0.1' and
+                (a!=x or b==y) 
+               )
 
-  if web_root=='public':
+
+  ## assign web_root
+
+  if ( config.web_root=='public' ):
     web_root = os.path.normpath(
                      join( serverRoot, 'public')
                )
-
-  if localServe.__class__.__name__=='bool': 
-     def _no_response(x):
-         return False;
+  elif( os.path.isdir(config.web_root) ):
+    web_root = os.path.normpath(config.web_root)
   else:
-     def _no_response(client_address):
-        # only works for subnet 255.255.255.0 networks
-        # with one gateway
-        a,b = os.path.splitext(localServe)
-        x,y = os.path.splitext(client_address)
-        return a!=b or b==y
+    raise Exception( 
+     "web_root must be 'public' or abs path of a " +
+     "directory\n check your config.py file"
+    )
 
-  ## add serverRoot to appDirs
+  ## adjust appDirs
 
   jsobj.appDirs.append(serverRoot)
 
+  ## adjust getList
+
+  if not config.listDir:
+     jsobj.getList.append('nolist')
+  if config.shutdown:
+     jsobj.getList.append('shutdown')  
+
   return makeObj( 
      shutdown = _shutdown,
-     debug = debug,
-     dbg = _dbg if debug>=1 else no_dbg,
-     unwanted_chars = unwanted_chars,
+     debug = config.debug,
+     unwanted_chars = config.unwanted_chars,
      Handled = Handled,
      
-     localServe = localServe,
+     localServe = config.localServe,
      no_response = _no_response,
-     port = port,
-     multithreading = multithreading,
+     port = config.port,
     
      web_root= web_root,
      server_dir = serverRoot,
@@ -120,8 +131,7 @@ consts = get_constants()
 #        Renamed httpd.soconsts after we have a server.
 #        Think of soconsts as constants (sort of)
 #        They may be changed if any possible change
-#        is to the same value.  This restriction
-#        enables consistency in multithreading.
+#        is to the same value.  
 
 
 ## setup server ##
@@ -130,16 +140,11 @@ serverAddress = ( ('127.0.0.1',int(consts.port))  \
                           if consts.localServe==True
                  else ('0.0.0.0',int(consts.port)) )
 
-if consts.multithreading:
-   from SocketServer import ThreadingMixIn
-   class Server( ThreadingMixIn, HTTPServer ): pass
-else:
-   Server = HTTPServer
-
 os.chdir(consts.web_root)  
-#        SimpleHTTPServer needs serviceRoot to be current
+#        SimpleHTTPServer needs web_root to be current
+#        directory
 
-httpd = Server(
+httpd = HTTPServer(
             serverAddress, 
             ProgrammableRequestHandler
         )
@@ -149,7 +154,9 @@ httpd.soconsts = consts
 
 ## run the server ##
 
-print 'Starting httpd on port '+ consts.port
+print 'getList=' + str(','.join(httpd.soconsts.getList))
+print( 'Starting httpd on port '+ consts.port +
+       ' and serving static files from ' + consts.web_root )
 print '...'
 
 while want_continue: httpd.handle_request()

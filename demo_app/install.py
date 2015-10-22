@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: latin-1 -*-
+
+# Running Python from $PATH, it had better be Python 2.7.x
+
 usage = """
   python install.py programmable_server_dir
   
