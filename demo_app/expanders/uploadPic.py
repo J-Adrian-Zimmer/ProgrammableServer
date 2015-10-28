@@ -38,12 +38,10 @@ def post():
   # invoked for POST requests, rejects those which
   # are not for uploadPic
   if request=='/uploadPic':
-
-    mixins(
-          'upload',  # for upload_ext and upload
-          'network'  # for me
-          # see expander_mixins
-         )
+    mixins('upload')  # for upload_template, upload_ext 
+                      # upload_filename, and upload
+    me = unmixed('network').me
+    web_root = unmixed('constants').web_root
 
     if not me():
        _send_html(
@@ -54,11 +52,7 @@ def post():
     
     # upload it
     defanged = _defang_name(handler,upload_filename)
-    absfile = os.path.join( 
-                handler.server.soconsts.web_root,
-                'media',
-                defanged
-              )
+    absfile = os.path.join( web_root,'media',defanged )
     if upload(absfile):
        _send_html(
           'Upload OK.  Find picture at media/' + defanged

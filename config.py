@@ -2,11 +2,9 @@
 
 ## Leave config.original unedited.  Edit config.py instead    ##
 
-## if debug=0, no output 
-##    debug=1, only show messages from expanders
-##    debug=2, show all messages
+## debug 
 
-debug = 0
+debug = True
 
 
 ## port determines which port the server listens on
@@ -17,22 +15,15 @@ port = '80'
 ##    localServe = True -- only requests from same computer 
 ##                      -- are honored
 ##    localServe = False -- any request is honored
-##    localServe = <gateway IP number> 
-##                 -- Use this option only if you have a local
-##                 -- net with netmask 255.255.255.0 and with
-##                 -- just one gateway.
-##                 -- Enter the IP/4 number of the gateway and
-##                 -- requests coming from elsewhere in your
-##                 -- local net will be honored.
 
-localServe = True
+localServe = False
 
 
-## jQuery determines where jQuery comes from
+## jquery determines where jQuery comes from
 ## (default depends on localServe)
 
 if localServe!=False:
-   jquery = "/js/jquery.min.js"
+   jquery = "jquery.min.js"
 else:
    jquery = \
    "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" 

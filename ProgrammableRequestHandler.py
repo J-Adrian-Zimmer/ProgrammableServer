@@ -45,10 +45,10 @@ def giveup( handler, who, status, message, raiseHandled=True ):
 def load_mod( handler, namepy, which ):
    # loads a module whose name we don't know at compile
    # time 
-   # adds 'mixins' function to the e
+   # adds functions to its namespace
    name = namepy[:-3] 
    dirs = map( 
-            lambda d: join(d,which), 
+            lambda d: join(d,which),
             handler.server.soconsts.appDirs 
           )
    try:
@@ -115,6 +115,9 @@ def unmixed(handler,mixinName):
    return Bunch( getMixin(handler,mixinName) )
 
 def init_MEM(handler):
+   global debug
+   debug = handler.server.soconsts.debug
+   
    import urlparse
    
    scheme,netloc,path,params,query,fragment = \
@@ -127,7 +130,6 @@ def init_MEM(handler):
            'path':path,
            'params':params,
            'query':query,
-           'fragment':fragment,
            'headers':handler.headers
    }
 
@@ -137,12 +139,13 @@ class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
       init_MEM(self)
       if not unmixed(self,'network').serve():
          return
-      debug = self.server.soconsts.debug
+      if debug: 
+         print "REQUEST PATH: " + self._MEM['path']
       try:
          for n in self.server.soconsts.getList:
-            if debug:  print( 'DOING ' + n )
+            if debug:  print( 'TRYING ' + n )
             loadExpander(self,n).get()
-         if debug:  print('Starting SimipleHTTPRequestHandler')
+         if debug:  print('Starting SimpleHTTPRequestHandler')
          SimpleHTTPRequestHandler.do_GET(self)
       except self.server.soconsts.Handled:
          pass  # Handled means browser and (if necessary)
@@ -159,10 +162,9 @@ class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
       init_MEM(self)
       if not unmixed(self,'network').serve():
          return
-      debug = self.server.soconsts.debug
       try:
          for n in self.server.soconsts.postList:
-            if debug: print('DOING ' + n)
+            if debug: print('TRYING ' + n)
             loadExpander(self,n).post()
          giveup(
             self, 

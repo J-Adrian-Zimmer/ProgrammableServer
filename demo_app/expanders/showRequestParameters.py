@@ -12,8 +12,8 @@ def get():
          'out'    # for send
       )  # requestInfo and out are found in expander_mixins
 
-      def dictDisplayer( display, item ):
-          return display + ( 
+      def dictDisplayer( buildme, item ):
+          return buildme + ( 
               "<tr><td>%s</td><td>%s</td></tr>" % item
           )
 
@@ -38,12 +38,11 @@ def get():
                       )
       )                           
      
-      if len(path)>0 and path[0]=='showRequestParameters': 
-         send(
-            200,
-            { 'content-type':'text/html; charset=utf-8' },
-            html
-         ) 
+      send(
+         200,
+         { 'content-type':'text/html; charset=utf-8' },
+         html
+      ) 
 
 html_template = """
 <!doctype html>

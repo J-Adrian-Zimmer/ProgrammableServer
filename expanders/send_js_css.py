@@ -4,10 +4,12 @@ join = os.path.join
 def get():
   mixins(
          'out',         # for send and giveup
-         'orderings',   # for appDirs
-         'requestInfo'  # for appDirs, path, and pathext
+         'constants',   # for appDirs
+         'requestInfo'  # for  path, and pathext
       )
-  ln2 = len(path)>=2
+  print 'ONE:'  + str(len(path))
+  ln2 = len(path)==2
+  if len(path)>1:  print path[0] + '///' + path[1]
   def readFile():
      for d in appDirs:
         try:
@@ -52,6 +54,7 @@ def get():
               404,
               "Expecting a 'css' file"
            )
+     print 'TWO'
   except handler.server.soconsts.Handled:
      raise Handled()
   except Exception as e:

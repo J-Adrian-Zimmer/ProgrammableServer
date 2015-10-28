@@ -12,16 +12,14 @@ file has a method json_out that sends a string formated
 as a JSON object to the server using jQuery's support for
 Ajax transfers.
 
-Most of ajaxable_out's behavior comes from the page_out
+Most of ajaxable_page's behavior comes from the page_out
 function in the out mixin.
 '''
 
 def get():
   if request=='/echo':
-     print 'I-0'
      mixins('jsonSupport')  # for ajaxable_page
           # jsonSupport.py is found in expander_mixins
-     print 'I-1'
      ajaxable_page(
          title = 'Ajax & JSON Exampler',
          cssList = _css,
@@ -29,7 +27,6 @@ def get():
                       # happens to be inline Javascript
          body = body
      )
-     print 'II-2'
 
 body = """
 <h2>Enter Text & Choose Upper or Lower Case</h2>
@@ -63,9 +60,9 @@ _other_part = """
 
 /* 
 this script could have been loaded from a file with
-ajaxable_out's jsList parameter.   Merely showing
+ajaxable_page's jsList parameter.   Merely showing
 another possibility here.   jQuery is loaded automatically
-by both page_out and ajaxable_out.  See the config.py file.
+by both page_out and ajaxable_page.  See the config.py file.
 */
 
 function $id(x) {

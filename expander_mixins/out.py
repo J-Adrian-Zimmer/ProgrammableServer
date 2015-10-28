@@ -30,7 +30,6 @@ The out mixin provides
 from urlparse import urlparse
 
 def getResources():
-   sc = handler.server.soconsts
    return dict( 
 
       send = 
@@ -58,14 +57,24 @@ def getResources():
    )
 
 def _page_out(handler,title,jsL,cssL,otherH,body):
-   from config import jquery
-   js = ''.join(
+   print 'ZERO'
+   # set Javascript links, starting with jquery
+   jq = (unmixed('constants')).jquery
+   js = ( _js_template_foreign % jq  
+                      if jq[0:4]=='http' 
+                      else _js_template % jq )
+   print 'PAGE_OUT:' + js
+   js += ''.join(
              map( 
+              # wrap jquery and each js file in jsL
               lambda x: _js_template % x, 
-              [jquery] + jsL  
+              jsL 
            ))
+   
+   # set CSS links   
    css = ''.join(
              map( 
+              # wrap each css file in cssL
               lambda x: _css_template % x, 
               cssL 
           ))
@@ -159,6 +168,10 @@ _startPage_template = """
    
 _js_template = """
 <script language="javascript" type="text/javascript" src="/js/%s"></script>
+"""
+
+_js_template_foreign = """
+<script language="javascript" type="text/javascript" src="%s"></script>
 """
 
 _css_template = """
