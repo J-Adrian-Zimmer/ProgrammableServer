@@ -31,76 +31,61 @@ from urlparse import urlparse
 
 def getResources():
    return dict( 
-
-      send = 
-        lambda status, headers, contents:
-           _send_(handler,status,headers,contents),
-
-      giveup = lambda who,status,message: \
-                   _giveup_(handler,who,status,message),
-
-      page_out = ( lambda title = 'anonymous',  
-                          jsList = [],
-                          cssList = [],
-                          other_part = '',
-                          body = '':
-                           _page_out(             # adds handler 
-                                handler,
-                                title,
-                                jsList,
-                                cssList,
-                                other_part,
-                                body
-                           )
-                 )
-   
+      send = _send_,
+      giveup = _giveup_,
+      page_out = _page_out
    )
 
-def _page_out(handler,title,jsL,cssL,otherH,body):
-   print 'ZERO'
+## helpers ##
+
+def _page_out(
+      title = 'anonymous',
+      jsList = [],
+      cssList = [],
+      other_head = '',
+      body = ''
+):
    # set Javascript links, starting with jquery
    jq = (unmixed('constants')).jquery
    js = ( _js_template_foreign % jq  
                       if jq[0:4]=='http' 
                       else _js_template % jq )
-   print 'PAGE_OUT:' + js
    js += ''.join(
              map( 
-              # wrap jquery and each js file in jsL
+              # wrap jquery and each js file in jsList
+              
               lambda x: _js_template % x, 
-              jsL 
+              jsList 
            ))
    
    # set CSS links   
    css = ''.join(
              map( 
-              # wrap each css file in cssL
+              # wrap each css file in cssList
               lambda x: _css_template % x, 
-              cssL 
+              cssList
           ))
    page = (_startPage_template.format(
               title = title,
               js = js,
               css = css,
-              other_head = otherH,
+              other_head = other_head,
               body = body
           ))
    handler.send_response(200)
-   handler.send_header("content-type","text/html")
    handler.send_header(
-       'content-length',
-       len(page.encode('utf-8'))
+      "content-type","text/html; charset=utf-8"
    )
+   page = page.encode('utf-8')
+   handler.send_header( 'content-length', str(len(page)) )
    handler.end_headers()
    handler.wfile.write(page)
    raise Handled
 
-## helpers ##
-
-def _send_( handler, status, headers, contents ):
+def _send_(  status, headers, contents ):
    handler.send_response(status)
    if not (headers and headers.has_key('content-length')):
-      headers['Content-Length'] = \
+      headers['content-length'] = \
          str(len(contents.encode('utf-8')))
    for k in headers:
       handler.send_header(k,headers[k])
@@ -108,7 +93,7 @@ def _send_( handler, status, headers, contents ):
    handler.wfile.write( contents )
    raise Handled()
  
-def _giveup_( handler, who, status, message ):
+def _giveup_(  who, status, message ):
    handler.send_error(
           status,
           "\n  " + who + ":\n  " + message
@@ -116,34 +101,7 @@ def _giveup_( handler, who, status, message ):
    print( who + ' giving up!\n  ' + message)
    raise Handled()
 
-def _page_out(handler,title,jsL,cssL,otherH,body):
-   from config import jquery
-   js = ''.join(
-             map( 
-              lambda x: _js_template % x, 
-              [jquery] + jsL  
-           ))
-   css = ''.join(
-             map( 
-              lambda x: _css_template % x, 
-              cssL 
-          ))
-   page = (_startPage_template.format(
-              title = title,
-              js = js,
-              css = css,
-              other_head = otherH,
-              body = body
-          ))
-   handler.send_response(200)
-   handler.send_header("content-type","text/html")
-   handler.send_header(
-       'content-length',
-       len(page.encode('utf-8'))
-   )
-   handler.end_headers()
-   handler.wfile.write(page)
-   raise Handled
+
 _startPage_template = """
 <!doctype html>
 <!-- generated with Python's string format from a template -->

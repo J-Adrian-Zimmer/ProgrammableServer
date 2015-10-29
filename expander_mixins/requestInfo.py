@@ -38,12 +38,11 @@ def getResources():
                 os.path.splitdrive(request)[1].split('/')
              )
            )
-   print "rEQUESTiNFO:" + ";".join(path)
 
    if len(path)==0:
       ext = ''
    else:
-      ext = os.path.splitext(path[-1])[1][1:]
+      ext = os.path.splitext(path[-1])[1][1:].lower()
 
 
    return dict(

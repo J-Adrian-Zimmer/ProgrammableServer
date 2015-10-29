@@ -23,16 +23,16 @@ def getResources():
 
     return dict ( 
         client_ip = handler.client_address[0],
-        me = lambda: _me(handler), 
-        us = lambda: _us(handler), 
-        serve = lambda: _serve(handler)
+        me = _me, 
+        us = _us, 
+        serve = _serve
     )
 
-def _me(handler):
+def _me():
     return handler.client_address[0]=='127.0.0.1'
            # this one IP number isn't going to be faked
     
-def _us(handler):
+def _us():
     import os
     co = unmixed('constants')
     ha = co.client_iphandler.client_address[0]
@@ -42,14 +42,11 @@ def _us(handler):
     x,y = os.path.splitext(ha)
     return (ha=='127.0.0.1' or (a==x and b!=y) )
 
-def _serve(handler):
+def _serve():
     co = unmixed('constants')
     if isinstance(co.localServe,bool):
-       #print "bool and returning " + str(
-       #           (not co.localServe) or _me(handler))
-       return (not co.localServe) or _me(handler)
+       return (not co.localServe) or _me()
     else:
-       #print "ip and returning " + str(_us(handler))
-       return _us(handler)
+       return _us()
     
    

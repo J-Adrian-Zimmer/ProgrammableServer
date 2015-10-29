@@ -30,7 +30,7 @@ _error_msg = """ There has been a problem with the upload mixin.
 Whether the problem was included in the HTML sent to the 
 browser or in the server code is unknown."""
 
-def _get_upload_info(handler):
+def _get_upload_info():
   # parse the upload request 
   # assume form followed our upload template
   try:
@@ -68,7 +68,7 @@ def _upload_(upfile,writefilename):
 def getResources():
    mixins("requestInfo")
    if command=='POST':
-      ufile = _get_upload_info(handler)
+      ufile = _get_upload_info()
       return dict(
          upload_template = template,
          upload_filename = ufile.filename,

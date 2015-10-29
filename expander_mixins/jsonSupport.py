@@ -57,7 +57,7 @@ def getResources():
       body=''
    ):
       jsList = jsList + ["support.js"]
-      print 'AJAXABLE jsList: ' + ';'.join(jsList)
+      print 'AJAXABLE jsList:\n  ' + ';'.join(jsList)
       page_out( title, jsList, cssList, other_part, body ) 
 
    return dict(
