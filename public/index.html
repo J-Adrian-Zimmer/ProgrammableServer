@@ -1,53 +1,93 @@
-<h1 style="text-align:center" id="python-programmable-web-server">Python Programmable Web Server</h1>
+<!doctype html>
+<!-- generated with Python's string format from a template -->
+<html>
+<head>
+<title>About the Programmable Server</title>
+<meta charset="utf-8"/>
+</head><body>
+<h1 style="text-align:center">Python Programmable Web Server</h1>
 <div style="width:59%; float:left; padding:10px;">
 <p>The <a
 href="https://github.com/J-Adrian-Zimmer/ProgrammableServer">Programmable
 Server</a> is Python-based and bare bones.  It is made to have apps plugged into it.  </p>
-<p>Here is a list of what is possible without any customization:</p>
+<p>Here is a list of what is possible without any apps or customization:</p>
 <ol>
-<li>Get this screen by entering the abbreviated url <code>localhost</code> in your browser.</li>
-<li>Shut the server down by entering <code>localhost/shutdown</code> in your browser.</li>
+<li>Get this screen by entering the abbreviated URL
+<code>localhost</code> in your browser.  (The URL
+<code>localhost/about</code> will work as well.) </li>
+<li>Shut the server down by entering <code>localhost/shutdown</code>
+in your browser.</li>
 <li>See a bird picture by entering <code>localhost/media/wetBird.JPG</code> in your browser.</li>
+<li>See a listing of what is in the <code>media</code> directory by
+entering <code>localhost/media</code>.</li>
 <li>Add other things to the <code>public</code> subdirectory so you can see them the way you&#39;ve seen the bird picture.</li>
 </ol>
-<p>A <I>first customization</I> might be to search for
-<code>web_root</code> in the configuration file <code>config.py</code> and set it to a
-different directory.  This directory will become the root of your
-static file service.  The default value of <code>web_root</code> is <code>public</code> which the server sees as a keyword telling it to use the default <code>public</code> subdirectory.  When you replace <code>public</code> be sure to use a full path name.  This  path name can point to anyplace on your computer.</p>
-<p>Note that the original configuration only allows access from
-browsers on the same computer as the server.
-(Hence the use of <code>localhost</code> in the above URLs.  It
-would be more normal to use a  
-domain name or possibly a IP number.)  A <I>second
-customization</I>
-might be to allow access for
-any browser that can reach your server&#39;s computer.  Do this by
-setting <code>localServe</code>
-to <code>False</code>.   If this doesn't work have a look at your
-computer's firewall.
-</p><p>
-If you have a local network with a
-<code>255.255.255.0</code> mask and
-one gateway, then you can restrict access to browsers on this network by
-assigning the IP/4 number of the gateway to <code>localServe</code>.</p>
-<blockquote>
-<p>If you are unsure what that last sentence means or whether it
-applies to you, don&#39;t try it!
-Accept that your choices are &quot;browsers on the same computer&quot; and
-&quot;any browser that can reach your server&#39;s computer&quot;.</p>
-</blockquote>
-<p>By the way, regardless of how you set <code>localServe</code> the
-<code>shutdown</code> command will only work from a browser on the
-same computer as the server.
+<p>
+Two ways of learning to write apps are:
 </p>
-<p>A <I>third customization</I> might be to install the 
-<a href="about_demo.html">demonstration app</a>
-which is located in the <code>demo_app</code> subdirectory.
+<ol>
+<li> Study the included demonstration app.  Go to the
+<code>demo_app</code>
+directory and run <code>install.py</code> with Python 2.7.x. 
+Now when you restart the Programmable Server
+<p><code>
+localhost/about
+</code></p>
+<p>
+will show a screen that provides an overview of the demonstration
+app and explains how to get the original configuration of the
+server back.  
+</p>
+<p>
+Many of you can learn to create apps
+by studying the code that enables these
+demonstrations.
+</p>
+</li>
+<li> If step 1 is insufficient, buy the ebooklet &ldquo;A Python Programmable Web Server&rdquo;.  It will soon be available in Kindle form
+from Amazon and in epub form from many other sources.
+</li>
+</ol>
+<p>
+You can customize the behavior of the Programmable Server by
+editing the <code>config.py</code> file and restarting the server.  Comments
+in <code>config.py</code> explain the many possibilities.  Two examples are:
+</p>
+<ol>
+<li>
+<p>
+Search for
+<code>web_root</code> in <code>config.py</code> and set it to a
+different directory.  This directory will become the root of your
+static file service.  Unless this directory has a
+<code>index.html</code> file, requesting <code>localhost</code> will
+now produce a listing of files in the directory. 
+</p>
+<p>
+The default value of <code>web_root</code> is
+<code>public</code> which the server sees as a keyword telling it to
+use the default <code>public</code> subdirectory.  When you replace
+<code>public</code> be sure to use a full path name.  This  path
+name can point to anyplace on your computer you have permission to
+read.
+</p>
+</li>
+<li><p>
+The original configuration only allows access from
+browsers on the same computer as the server.
+(Hence the use of <code>localhost</code> rather than a domain name in the above URLs.)  You
+can remove this restriction by setting the 
+<code>localServe</code> parameter
+to <code>False</code>.
 </p><p>
-The demonstration app together with its code and comments will be enough for some of you to start building your own applications.  Others may want to buy 
-the displayed ebooklet.  It is available in Kindle format from Amazon and in epub format from many other sources.</p>
+Note that when you enable requests from browsers on other computers,
+the <code>shutdown</code> request will still only work with
+<code>localhost</code>.</p>
+</li>
+</ol>
 </div>
 <div style="width:39%; float:right;"> <p style="width:100%; margin-top:40px;
 text-align:center;"><img height="600px"
-src="/media/ProgrammableServerCover.jpg" alt="A Simple Programmable
-Web Server for Python"></p></div>
+src="/public/media/ProgrammableServerCover.jpg" alt="A Simple Programmable
+Web Server for Python"></div>
+</body></htm>

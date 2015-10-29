@@ -20,6 +20,8 @@ def getResources():
              # directory tree for static files
      server_dir = cs.server_dir,
              # directory where server is
+     jquery = cs.jquery,
+             # where jQuery will be fetched from
      getList = cs.getList,
              # list of GET expanders in order tried
      postList = cs.postList,

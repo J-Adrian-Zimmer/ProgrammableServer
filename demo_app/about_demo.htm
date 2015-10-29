@@ -1,0 +1,43 @@
+<h1 style="text-align:center">Programmable Server<br>Demo Application</h1>
+<p>The Programmable Server works by executing a sequence of 
+&ldquo;expander&rdquo; modules.  Each of these is a Python file that
+chooses to respond to a particular browser request or not.  Once a
+response has happened no more expander files are executed.
+</p>
+<p>If you are reading this you have probably already installed the
+demonstration app.   If not, 
+<p>
+<blockquote>go to the <code>demo_app</code> subdirectory of
+the Programmable Server's directory and run <code>install.py</code>
+using Python 2.7.x.  Then restart the server.
+You can return the server to its original state by running
+<code>restore.py</code> from the server&#39;s directory.</p>
+</blockquote>
+<p>
+This demo application is not intended to be useful.  Rather it was
+designed to show the variety of things a programmer of an expander
+can do.</p>
+<p>
+There are four expanders in the demonstration:
+</p>
+<ol>
+<li><p><strong>about</strong> which shows this page.</p></li>
+<li><p><strong>echo</strong> which bounces text to the server and
+back using AJAX technology and formatting the transfer data with
+JSON.</p>
+</li>
+<li><p><strong>showRequestParameters</strong> which shows
+the various views of a browser request.</p>
+</li>
+<li><p><strong>uploadPic</strong> which uses an HTML form to upload a
+picture.</p>
+</li>
+</ol>
+
+<p>You can invoke these demonstrations with <code>localhost\about</code> etc.  Each one will tell
+you where to find its source code.  It is that source code and the
+included comments which will show you how to make your own
+applications.</p>
+<p> If you need more help consider buying
+<a href="http://amazon.com">&ldquo;A Python Programmable Web Server&rdquo;</a>.
+

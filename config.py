@@ -4,7 +4,7 @@
 
 ## debug 
 
-debug = True
+debug = False
 
 
 ## port determines which port the server listens on
@@ -16,7 +16,7 @@ port = '80'
 ##                      -- are honored
 ##    localServe = False -- any request is honored
 
-localServe = False
+localServe = True
 
 
 ## jquery determines where jQuery comes from

@@ -26,9 +26,8 @@ shutil.copyfile(
      'config.py'
 )
 
-print('Restoration complete.')
+print('\nRestoration complete.')
 print(
-'Warning! Restoration assumed:' +
-'\n  only config.py and expanderOrderings.json have been altered.'
+'  Only config.py and expanderOrderings.json have been altered.\n'
 )
 

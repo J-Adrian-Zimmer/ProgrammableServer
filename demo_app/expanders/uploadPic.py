@@ -65,7 +65,7 @@ def post():
 
 body = """
    <h1>Upload A Picture</h1>  
-   <p>Source code for this app is found in
+   <p>Source code for this demo is found in
    <code>demo_app\expanders\uploadPic</code>.
    </p>
    <div>%s</div>

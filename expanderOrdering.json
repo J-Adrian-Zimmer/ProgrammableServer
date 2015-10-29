@@ -1,1 +1,7 @@
-{"postList": ["echoHandler", "uploadPic"], "getList": ["send_js_css", "echo", "showRequestParameters", "uploadPic"], "appDirs": ["E:\\git\\ProgrammableServer\\demo_app"]}
+{
+   "getList" : ["about","serveFiles"],
+   "postList" : [],
+   "appDirs" : []
+}
+
+

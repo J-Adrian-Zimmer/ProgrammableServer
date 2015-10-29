@@ -1,5 +1,5 @@
 {
-   "getList":["echo","showRequestParameters","uploadPic"],
+   "getList":["about","echo","showRequestParameters","uploadPic"],
    "postList":["echoHandler","uploadPic"],
    "appDirs":["e:/git/ProgrammableServer/demo_app"]
 }

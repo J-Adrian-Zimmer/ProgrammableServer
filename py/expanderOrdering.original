@@ -1,5 +1,5 @@
 {
-   "getList" : [],
+   "getList" : ["about","serveFiles"],
    "postList" : [],
    "appDirs" : []
 }

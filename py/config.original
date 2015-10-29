@@ -4,7 +4,7 @@
 
 ## debug 
 
-debug = True
+debug = False
 
 
 ## port determines which port the server listens on

@@ -95,6 +95,7 @@ def getMixin(handler, mixin_name):
    mix = handler._MEM['mixin']
    if mix.has_key(mixin_name):
       resources = mix[mixin_name]
+      print '..fetched mixin: ' + mixin_name
    else:
       m = load_mod(
                  handler, 
@@ -103,6 +104,7 @@ def getMixin(handler, mixin_name):
       )
       resources = m.getResources()
       mix[mixin_name] = resources
+      print '..loaded mixin: ' + mixin_name
    return resources
 
 def mixins(handler,mixin_tuple,where_dict):
@@ -140,10 +142,10 @@ class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
       if not unmixed(self,'network').serve():
          return
       if debug: 
-         print "REQUEST PATH: " + self._MEM['path']
+         print "GET REQUEST PATH:\n  " + self._MEM['path']
       try:
          for n in self.server.soconsts.getList:
-            if debug:  print( 'TRYING ' + n )
+            if debug:  print( 'TRYING: ' + n )
             loadExpander(self,n).get()
          if debug:  print('Starting SimpleHTTPRequestHandler')
          SimpleHTTPRequestHandler.do_GET(self)
@@ -162,6 +164,8 @@ class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
       init_MEM(self)
       if not unmixed(self,'network').serve():
          return
+      if debug: 
+         print "POST REQUEST PATH:\n  " + self._MEM['path']
       try:
          for n in self.server.soconsts.postList:
             if debug: print('TRYING ' + n)
