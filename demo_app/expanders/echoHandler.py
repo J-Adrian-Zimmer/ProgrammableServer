@@ -20,16 +20,16 @@ NOTICE: Incoming is a Python object whereas outgoing is a
         Python dict.
 '''
 
-## Both jsonIn and json_out are provided by jsonSupport
+## Both jsonIn and jsonOut are provided by jsonCom
 
 def post():
   if request=='/echoHandler':
-     mixins('jsonSupport')  # for jsonIn and jsonOut
-          # jsonSupport.py is found in expander_mixins
+     mixins('jsonCom')  # for jsonIn and jsonOut
+          # jsonCom.py is found in expander_mixins
      jsn = jsonIn()
      if jsn.goal=='uppercase':
-        json_out( { "text" : jsn.text.upper() } )
+        jsonOut( { "text" : jsn.text.upper() } )
      else:
-        json_out( { "text" : jsn.text.lower() } )
+        jsonOut( { "text" : jsn.text.lower() } )
 
 

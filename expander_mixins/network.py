@@ -14,9 +14,8 @@ The network mixin provides:
             # (i.e. not for wifi's) and is not documented 
             # elsewhere
     serve() -- return True iff 
-                        me() and localServe==True ()
-                        localServe==False
-                        us() and localServe not boolean
+                        (me() and localServe==True ())
+                        or localServe==False
 '''
 
 def getResources():

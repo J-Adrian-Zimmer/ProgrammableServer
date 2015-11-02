@@ -67,7 +67,7 @@ def get_constants():
      Handled = Handled,
      
      debug = config.debug,
-     unwanted_chars = config.unwanted_chars,
+     drop_regex = config.drop_regex,
      localServe = config.localServe,
      port = config.port,
      jquery = config.jquery,

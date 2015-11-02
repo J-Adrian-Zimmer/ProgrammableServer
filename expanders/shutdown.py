@@ -5,10 +5,7 @@
 
 def get():
    if request=='/shutdown': 
-      mixins( 
-             'network' # for me
-           )
-      if me():
+      if (unmixed('network')).me():
          (handler.server.soconsts.shutdown)()
          raise Handled()
 

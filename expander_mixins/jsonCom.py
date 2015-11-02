@@ -1,16 +1,17 @@
 '''
    The jsonSupport mixin is much like the out mixin but
    subtracts the send function and adds others supporting
-   applications that use Ajax and JSON to communicate.
+   applications that use Ajax (without the 'x', i.e. XML and
+   with JSON) to communicate.
    Has these functions
 
       jsonIn --  for a POST request response to Ajax
                  Python object is obtained
-      json_out -- for a POST request response to Ajzx
+      jsonOut -- for a POST request response to Ajzx
                  send a Ajaxable Pyton object or dict
-      ajaxable_page -- like out's page_out but adds 
-                    Javascript for sending a JSONable
-                    Javascript object via Ajax
+      spage_out -- like out's page_out but adds 
+                 Javascript for sending a JSONable
+                 Javascript object via Ajax
       giveup -- the give from the out mixin
 '''
 
@@ -19,7 +20,7 @@ import os, json
 class _Bunch:
    '''
    The _Bunch class makes a Python class from a dict
-   It enable jsonIn to return an object rather than a dict
+   It enables jsonIn to return an object rather than a dict
    '''
    def __init__(self, adict):
         self.__dict__.update(adict)
@@ -34,7 +35,7 @@ def getResources():
         content = '' 
       return _Bunch(json.loads(content))
 
-   def json_out(jsonable):
+   def jsonOut(jsonable):
       contents = ( json.dumps(jsonable.__dict__) if 
              type(jsonable).__name__=='instance' else
                             json.dumps(jsonable) 
@@ -49,7 +50,7 @@ def getResources():
       handler.wfile.write(contents)
       raise Handled
 
-   def ajaxable_page(
+   def spage_out(
       title='anonymous',
       jsList=[],
       cssList=[],
@@ -57,12 +58,11 @@ def getResources():
       body=''
    ):
       jsList = jsList + ["support.js"]
-      print 'AJAXABLE jsList:\n  ' + ';'.join(jsList)
       page_out( title, jsList, cssList, other_part, body ) 
 
    return dict(
       jsonIn = jsonIn,
-      json_out = json_out,
-      ajaxable_page = ajaxable_page,
+      jsonOut = jsonOut,
+      spage_out = spage_out,
       giveup = giveup
    )

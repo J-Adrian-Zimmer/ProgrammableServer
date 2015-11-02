@@ -44,7 +44,7 @@ def sendPublic(filepath):
    try:
       with open( afile, 'rb') as fo: page = fo.read()
    except:
-      giveup( 
+      (unmixed('out')).giveup(
         'staticResponse.sendPublic',
         404, 
         "Cannot find readable version of " + filepath 
@@ -54,7 +54,7 @@ def sendPublic(filepath):
                splitext(afile)[1].lower()
            ]
    if mtype[:24]=='application/octet-stream':
-      giveup( 
+      (unmixed('out')).giveup(
         'staticResponse.sendPublic',
         415, 
         "Unrecognized extension" 
@@ -67,8 +67,14 @@ def sendPublic(filepath):
 
 def sendSearch(filepath,subdir):
   from os.path import join, normpath
-  mixin('requestInfo')
-  if pathext!=subdir: return
+  mixins('requestInfo')
+  print pathext + '==' + subdir
+  if pathext!=subdir:
+     (unmixed('out')).giveup(
+                 "staticSearch.sendsearch",
+                 500,
+                 "Unexpected file extension"
+     )
   content = None
   for d in (unmixed('constants').appDirs):
      try:
@@ -82,7 +88,7 @@ def sendSearch(filepath,subdir):
          content.encode("utf-8")
      )
   else:
-     giveup(
+     (unmixed('out')).giveup(
         'staticResponse._findFile', 
         500,
         "cannot load " + findFile 

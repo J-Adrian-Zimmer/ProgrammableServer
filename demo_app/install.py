@@ -6,12 +6,12 @@
 usage = """
   python install.py programmable_server_dir
   
-  Note current dir must be an app dir for
-   the Programmable Server.
+  Note current dir must be the dir for
+   the app being installed.
 
-  If programmable_server_dir is omitted
-   it is assumed to be the super dir of
-   the current dir.
+  You can omit programmable_server_dir.
+   If you do the it is assumed to be the 
+   super dir of the current dir.
 """
 
 import os, sys, shutil
@@ -47,8 +47,7 @@ source = files.readJSON(join(mydir,'expanderOrdering.editable'))
 dest   = files.readJSON(dest_path)
 import json
 try:
-   dest.getList = \
-     ['send_js_css'] + source.getList + dest.getList 
+   dest.getList = source.getList + dest.getList 
    dest.postList = source.postList + dest.postList
    dest.appDirs.insert(0,mydir)
 except:

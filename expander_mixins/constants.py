@@ -9,7 +9,7 @@ def getResources():
    return dict (
      debug = cs.debug,
              # True or False
-     unwanted_chars = cs.unwanted_chars,
+     drop_regex = cs.drop_regex,
              # for defanging upload paths
      localServe = cs.localServe,
              # True: browser on this computer only

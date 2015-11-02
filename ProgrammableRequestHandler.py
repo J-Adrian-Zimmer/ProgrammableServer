@@ -104,7 +104,7 @@ def getMixin(handler, mixin_name):
       )
       resources = m.getResources()
       mix[mixin_name] = resources
-      print '..loaded mixin: ' + mixin_name
+      if debug:  print '..loaded mixin: ' + mixin_name
    return resources
 
 def mixins(handler,mixin_tuple,where_dict):

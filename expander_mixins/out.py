@@ -94,11 +94,11 @@ def _send_(  status, headers, contents ):
    raise Handled()
  
 def _giveup_(  who, status, message ):
-   handler.send_error(
-          status,
-          "\n  " + who + ":\n  " + message
+   import sys
+   handler.send_error( status, message )
+   sys.stderr.write(
+      who + ' giving up!\n  ' + message +'\n'
    )
-   print( who + ' giving up!\n  ' + message)
    raise Handled()
 
 

@@ -1,7 +1,1 @@
-{
-   "getList" : ["about","serveFiles"],
-   "postList" : [],
-   "appDirs" : []
-}
-
-
+{"postList": ["echoHandler", "uploadPic"], "getList": ["about", "echo", "showRequestParameters", "uploadPic", "about", "serveFiles"], "appDirs": ["E:\\git\\ProgrammableServer\\demo_app"]}

@@ -6,24 +6,24 @@ When the buttons are clicked, an object with the
 textarea text and a goal ('uppercase' or 'lowercase')
 is sent to the server.
 
-This is possible because the ajaxable_page method formats
+This is possible because the spage_out method formats
 a page which loads a support.js file.  This Javascript
 file has a method json_out that sends a string formated
 as a JSON object to the server using jQuery's support for
 Ajax transfers.
 
-Most of ajaxable_page's behavior comes from the page_out
+Most of spage_out's behavior comes from the page_out
 function in the out mixin.
 '''
 
 def get():
   if request=='/echo':
-     mixins('jsonSupport')  # for ajaxable_page
-          # jsonSupport.py is found in expander_mixins
-     ajaxable_page(
-         title = 'Ajax & JSON Exampler',
+     mixins('jsonCom')  # for spage_out
+          # jsonCom.py is found in expander_mixins
+     spage_out(
+         title = 'Asynchronous Javascript & JSON Example',
          cssList = _css,
-         other_part = _other_part,  
+         other_part = _javascript,  
                       # happens to be inline Javascript
          body = body
      )
@@ -55,14 +55,14 @@ rather than in the browser using Javascript.
 
 _css = ["echo.css"]
 
-_other_part = """
+_javascript = """
 <script> 
 
 /* 
 this script could have been loaded from a file with
-ajaxable_page's jsList parameter.   Merely showing
+spage_out's jsList parameter.   Merely showing
 another possibility here.   jQuery is loaded automatically
-by both page_out and ajaxable_page.  See the config.py file.
+by both page_out and spage_out.  See the config.py file.
 */
 
 function $id(x) {

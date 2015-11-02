@@ -21,9 +21,9 @@ def _send_html(message):
        body= body % (form_template,message)
   )
 
-def _defang_name(handler,name):
+def _defang_name(name):
   from re import sub
-  uwc = handler.server.soconsts.unwanted_chars
+  uwc = (unmixed('constants')).unwanted_chars 
   name = os.path.basename(name)
   return sub(uwc,'',name)
 
@@ -51,7 +51,7 @@ def post():
         _send_html( "only accepting jpg files" )
     
     # upload it
-    defanged = _defang_name(handler,upload_filename)
+    defanged = _defang_name(upload_filename)
     absfile = os.path.join( web_root,'media',defanged )
     if upload(absfile):
        _send_html(
