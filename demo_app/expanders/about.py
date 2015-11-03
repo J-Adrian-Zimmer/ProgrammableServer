@@ -1,6 +1,5 @@
 '''
-Serves up the demo_app/about_demo.html, even if web_root has been 
-defined away from public.
+Sends a page built around demo_app/about_demo.body.
 '''
 
 def get():
@@ -12,7 +11,7 @@ def get():
                       # unmixed returns the constants
                       # expander mixin
                  'demo_app',
-                 'about_demo.htm'
+                 'about_demo.body'
                       # our convention is that .htm 
                       # .htm contain only the HTML 
                       # body
