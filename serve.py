@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: latin-1 -*-
 
 # Running Python from $PATH, it had better be Python 2.7.x
 
@@ -144,6 +143,7 @@ httpd.soconsts = consts
 
 print '\ngetList=' + str(','.join(consts.getList) + "\n")
 print 'postList=' + str(','.join(consts.postList) + "\n")
+print 'appDirs=' + str(','.join(consts.appDirs) + "\n")
 print( 'Starting httpd on port '+ consts.port +
        ' and serving static files from ' + consts.web_root + "\n" )
 print '...\n'

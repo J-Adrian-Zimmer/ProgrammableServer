@@ -10,10 +10,11 @@ import files
 
 ## helpers ##
 
-def copyfile(name,subdir=''):
+def copyfile(name,subdir='',subdir2=None):
+    subdir2 = subdir2 or subdir
     shutil.copyfile(
               join(subdir,name),
-              join(theDir,subdir,name)
+              join(theDir,subdir2,name)
     )
 
 ## end helpers ##
@@ -37,6 +38,7 @@ os.mkdir( join(theDir,"expanders") )
 os.mkdir( join(theDir,"expander_mixins") )
 os.mkdir( join(theDir,"css") )
 os.mkdir( join(theDir,"js") )
+os.mkdir( join(theDir,"static") )
 
 ## add a few files ##
 
@@ -46,7 +48,7 @@ files.writeJSON(
         'postList':[]
       }  ) 
 
-copyfile("install.py")
+copyfile("install.py",'py','.')
 copyfile("__init__.py","expanders")
 copyfile("__init__.py","expander_mixins")
 

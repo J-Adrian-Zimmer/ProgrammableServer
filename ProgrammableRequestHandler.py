@@ -21,10 +21,17 @@ from SimpleHTTPServer import SimpleHTTPRequestHandler
                                # extending this
 from os import               listdir
                                # for findng expander_mixins
-from os.path import          basename,join
+from os.path import          basename,join,dirname,split
                                # do path manipulation
-# other imports in def init_MEM
+from urllib import unquote     # handler.path unquoted
+                               # becomes request
+from re import compile,match   # determinie acceptable
+                               # paths
+from urlparse import urlparse  # initializes _MEM
 
+_okpath1 = r'(/[\w\d\-]+)*'
+_okpath2 = r'(/([\w\d]\.|[\w\d\-])*$)'
+okpath = compile(_okpath1+_okpath2)
 
 class Bunch:
    '''
@@ -47,9 +54,10 @@ def load_mod( handler, namepy, which ):
    # time 
    # adds functions to its namespace
    name = namepy[:-3] 
+   appDirs = handler.server.soconsts.appDirs
    dirs = map( 
             lambda d: join(d,which),
-            handler.server.soconsts.appDirs 
+            appDirs[handler._MEM['start_search']:]
           )
    try:
       fp, pathname, description = imp.find_module(
@@ -69,6 +77,18 @@ def load_mod( handler, namepy, which ):
          500, 
         'could not load ' + namepy,
       )
+   try:
+      if which=='expanders':
+         handler._MEM['start_search'] = appDirs.index( 
+                     split(dirname(m.__file__))[0] 
+         )
+   except:
+      giveup(
+         handler,
+         'load_mod',
+         500,
+         'This simply should not happen.'
+      )
    m.__dict__.update( dict( 
      mixins =  
        lambda *lst: mixins(handler,lst,m.__dict__),
@@ -84,6 +104,7 @@ def load_mod( handler, namepy, which ):
    return m
 
 def loadExpander(handler, expander_name ):
+   handler._MEM['start_search'] = 0
    m = load_mod(
               handler, 
               expander_name+".py", 
@@ -119,13 +140,22 @@ def unmixed(handler,mixinName):
 def init_MEM(handler):
    global debug
    debug = handler.server.soconsts.debug
-   
-   import urlparse
-   
+
    scheme,netloc,path,params,query,fragment = \
-                 urlparse.urlparse(handler.path)
+                         urlparse(handler.path)
+   
+   if path!=r'/' and not match(okpath,path):
+      giveup(handler,
+             'init_MEM',
+             404,
+             'File Not Found: ' + handler.path
+             ) 
+   
+   
    
    handler._MEM = { 
+           'start_search':None,
+              # the server's directory is at this index
            'mixin':{},
            'scheme':scheme,
            'netloc':netloc,

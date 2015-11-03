@@ -21,12 +21,6 @@ def _send_html(message):
        body= body % (form_template,message)
   )
 
-def _defang_name(name):
-  from re import sub
-  uwc = (unmixed('constants')).unwanted_chars 
-  name = os.path.basename(name)
-  return sub(uwc,'',name)
-
 ## get() and post() ##   
     
 def get():
@@ -51,11 +45,10 @@ def post():
         _send_html( "only accepting jpg files" )
     
     # upload it
-    defanged = _defang_name(upload_filename)
-    absfile = os.path.join( web_root,'media',defanged )
+    absfile = os.path.join( web_root,'media',upload_filename )
     if upload(absfile):
        _send_html(
-          'Upload OK.  Find picture at media/' + defanged
+          'Upload OK.  Find picture at media/' + upload_filename
        )
     else:
        _send_html(
