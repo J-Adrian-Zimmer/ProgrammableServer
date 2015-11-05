@@ -32,8 +32,10 @@ obained data in it without defanging.  (Using the path array in
 the requestInfo expander mixin is one way of doing this.)
 '''
 
+
 def sendPublic(filepath):
    if filepath[0]=='/': filepath = filepath[1:]
+   import os
    from os.path import join, splitext, normpath
    mixins('out')
    afile = normpath(join(
@@ -43,6 +45,7 @@ def sendPublic(filepath):
            ))
    try:
       with open( afile, 'rb') as fo: page = fo.read()
+      page_len = os.stat(afile).st_size
    except:
       (unmixed('out')).giveup(
         'staticResponse.sendPublic',
@@ -60,13 +63,11 @@ def sendPublic(filepath):
         "Unrecognized extension" 
       ) 
    else:
-      if mtype[:4]=='text': 
-         page = page.encode('utf-8')
-         mtype = mtype + '; charset=utf-8'
-      _respond(mtype,page)
+      _respond(mtype,page,page_len)
 
 def sendSearch(filepath,subdir):
   from os.path import join, normpath
+  import os
   mixins('requestInfo')
   print pathext + '==' + subdir
   if pathext!=subdir:
@@ -80,12 +81,14 @@ def sendSearch(filepath,subdir):
      try:
         fp = normpath(join( d, subdir, path[-1] ))
         with open(fp,'rb') as fi:  content = fi.read()
+        content_len = os.stat(fp).st_size
      except:
         pass
   if content:
      _respond(
-         "text/%s; charset=utf-8" % subdir,
-         content.encode("utf-8")
+         "text/%s" % subdir, 
+         content,
+         content_len
      )
   else:
      (unmixed('out')).giveup(
@@ -95,11 +98,11 @@ def sendSearch(filepath,subdir):
      )
 
 
-def _respond(mtype,content):
+def _respond(mtype,content,numbytes):
       handler.send_response(200)
       handler.send_header( "content-type", mtype )
       handler.send_header( 
-         'content-length', str(len(content)) 
+         'content-length', str(numbytes) 
       )
       handler.end_headers()
       handler.wfile.write(content)

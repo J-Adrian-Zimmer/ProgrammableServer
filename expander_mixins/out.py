@@ -74,9 +74,8 @@ def _page_out(
           ))
    handler.send_response(200)
    handler.send_header(
-      "content-type","text/html; charset=utf-8"
+      "content-type","text/html"
    )
-   page = page.encode('utf-8')
    handler.send_header( 'content-length', str(len(page)) )
    handler.end_headers()
    handler.wfile.write(page)
@@ -85,8 +84,7 @@ def _page_out(
 def _send_(  status, headers, contents ):
    handler.send_response(status)
    if not (headers and headers.has_key('content-length')):
-      headers['content-length'] = \
-         str(len(contents.encode('utf-8')))
+      headers['content-length'] = str(len(contents))
    for k in headers:
       handler.send_header(k,headers[k])
    handler.end_headers()
@@ -108,7 +106,6 @@ _startPage_template = """
 <html>
 <head>
 <title>{title}</title>
-<meta charset="utf-8"/>
 
 <!-- css links -->
 {css}

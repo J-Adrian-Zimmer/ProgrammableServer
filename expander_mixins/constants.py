@@ -9,8 +9,6 @@ def getResources():
    return dict (
      debug = cs.debug,
              # True or False
-     drop_regex = cs.drop_regex,
-             # for defanging upload paths
      localServe = cs.localServe,
              # True: browser on this computer only
              # False: browser anyplace than can reach here 
