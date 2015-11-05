@@ -4,7 +4,7 @@
 
 ## debug 
 
-debug = True
+debug = False
 
 
 ## port determines which port the server listens on
@@ -51,13 +51,6 @@ listDir = True
 
 shutdown = True
 
-## to defang incoming path names a double period is
-## removed
-## then to be more careful thiis regex is used to
-## remove most chars 
-## (notice that the listed chars are those to be kept)
-
-drop_regex = r'[^A-Za-z0-9_\-\.]' 
 
 ############################################################
 

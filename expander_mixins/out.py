@@ -24,7 +24,6 @@ The out mixin provides
   
       these are put into a page template that includes
         jQuery as defined in config.py
-
 '''
 
 from urlparse import urlparse
@@ -74,9 +73,8 @@ def _page_out(
           ))
    handler.send_response(200)
    handler.send_header(
-      "content-type","text/html; charset=utf-8"
+      "content-type","text/html"
    )
-   page = page.encode('utf-8')
    handler.send_header( 'content-length', str(len(page)) )
    handler.end_headers()
    handler.wfile.write(page)
@@ -85,8 +83,7 @@ def _page_out(
 def _send_(  status, headers, contents ):
    handler.send_response(status)
    if not (headers and headers.has_key('content-length')):
-      headers['content-length'] = \
-         str(len(contents.encode('utf-8')))
+      headers['content-length'] = str(len(contents))
    for k in headers:
       handler.send_header(k,headers[k])
    handler.end_headers()
@@ -94,11 +91,16 @@ def _send_(  status, headers, contents ):
    raise Handled()
  
 def _giveup_(  who, status, message ):
+   print 'FOUR'
    import sys
-   handler.send_error( status, message )
    sys.stderr.write(
       who + ' giving up!\n  ' + message +'\n'
    )
+   print(
+      who + ' giving up!\n  ' + message +'\n'
+   )
+   handler.send_error( status, message )
+   print 'FOUR AGAIN'
    raise Handled()
 
 
@@ -108,7 +110,6 @@ _startPage_template = """
 <html>
 <head>
 <title>{title}</title>
-<meta charset="utf-8"/>
 
 <!-- css links -->
 {css}

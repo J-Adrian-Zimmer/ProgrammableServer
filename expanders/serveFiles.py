@@ -1,30 +1,20 @@
 '''
-This expander serves '/public/...' files from the respective server diirectory.  These files must have a standard, informative extension.  
+This expander serves '/public/...' files from their the public directory.  These files must have a standard, informative extension.
 
-(The image in /public/index.html is served this way because if the
-serving were left up to the SimpleHTTPRequestHandler then it
-wouldn't work if the web_root parameter were changed.)
+Also serves '/js/...', '/css/...', and '/media/...' files from the respective application or server subdirectories.  These files must have extensions matching their directory names.   Most recently installed application has precedence.  Then the next most recently installed, etc.  
 
-Also serves '/js/...' and '/css/...' files from the respective application or server subdirectories.  These files must have extensions matching their directory names.   Most recently installed application has precedence.  Then the next most recently installed, etc.  Last in precedence are the '/js/...' and '/css/...' files in the server directory.
-
-(Javascript and CSS files are served this way so they can be defined
-in their corresponding applications and not necessarily placed in
-the web_root directory.)
+As a last resort, subdirectories of the server are attempted.  (This is not meant to encourage you to put things there.  Doing so will make server upgrades difficult for you.)
 '''
 
 def get():
-   if request[:8]=='/public/':
-      (unmixed('staticResponse')).sendPublic(
-                                       request[8:]
-                                  )
-   elif request[:4]=='/js/':
-      (unmixed('staticResponse')).sendSearch(
-                                       request[4:],
-                                       'js'
-                                  )
+   mixins('fileTools')
+   if request[:4]=='/js/':
+      file_out( search(request))
    elif request[:5]=='/css/':
-      (unmixed('staticResponse')).sendSearch(
-                                       request[5:],
-                                       'css'
-                                  )
-         
+      file_out( search(request))
+   elif request[:8]=='/media/':
+      file_out( search(request))
+   elif request[:8]=='/public/':
+      file_out(
+          (unmixed('constants')).server_dir + request
+      )

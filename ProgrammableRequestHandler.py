@@ -49,6 +49,7 @@ def giveup( handler, who, status, message, raiseHandled=True ):
    if raiseHandled:
       raise (handler.server.soconsts.Handled)()
 
+
 def load_mod( handler, namepy, which ):
    # loads a module whose name we don't know at compile
    # time 
@@ -57,8 +58,10 @@ def load_mod( handler, namepy, which ):
    appDirs = handler.server.soconsts.appDirs
    dirs = map( 
             lambda d: join(d,which),
-            appDirs[handler._MEM['start_search']:]
+            handler._MEM['earlyApps']
           )
+   if debug:
+      print name + ' IN? ' + ':'.join( dirs )
    try:
       fp, pathname, description = imp.find_module(
                          name,
@@ -79,15 +82,16 @@ def load_mod( handler, namepy, which ):
       )
    try:
       if which=='expanders':
-         handler._MEM['start_search'] = appDirs.index( 
-                     split(dirname(m.__file__))[0] 
+         i = appDirs.index( 
+            dirname(dirname(m.__file__)) 
          )
+         handler._MEM['earlyApps'] =  appDirs[i:]
    except:
       giveup(
          handler,
          'load_mod',
          500,
-         'This simply should not happen.'
+         'WTF? (' + dirname(m.__file__) + ')'
       )
    m.__dict__.update( dict( 
      mixins =  
@@ -104,7 +108,8 @@ def load_mod( handler, namepy, which ):
    return m
 
 def loadExpander(handler, expander_name ):
-   handler._MEM['start_search'] = 0
+   handler._MEM['earlyApps'] = \
+      handler.server.soconsts.appDirs
    m = load_mod(
               handler, 
               expander_name+".py", 
@@ -137,6 +142,11 @@ def mixins(handler,mixin_tuple,where_dict):
 def unmixed(handler,mixinName):
    return Bunch( getMixin(handler,mixinName) )
 
+def no_service():
+   return (localServe and
+           (unmixed('requestInfo').client_ip!='127.0.0.1'
+          )
+
 def init_MEM(handler):
    global debug
    debug = handler.server.soconsts.debug
@@ -148,14 +158,16 @@ def init_MEM(handler):
       giveup(handler,
              'init_MEM',
              404,
-             'File Not Found: ' + handler.path
-             ) 
-   
-   
+             'File Not Found: ' + handler.path,
+             False
+            ) 
+      return False 
    
    handler._MEM = { 
-           'start_search':None,
-              # the server's directory is at this index
+           'earlyApps': handler.server.soconsts.appDirs ,
+               # dirs of this app and apps
+               # installed earlier -- up
+               # to the server_dir
            'mixin':{},
            'scheme':scheme,
            'netloc':netloc,
@@ -164,15 +176,14 @@ def init_MEM(handler):
            'query':query,
            'headers':handler.headers
    }
+   return True
 
 class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
     
     def do_GET(self):
-      init_MEM(self)
-      if not unmixed(self,'network').serve():
-         return
-      if debug: 
-         print "GET REQUEST PATH:\n  " + self._MEM['path']
+      if not init_MEM(self): return
+      if no_service(): return if debug: 
+         print "\n\nGET REQUEST PATH:\n   " + self._MEM['path']
       try:
          for n in self.server.soconsts.getList:
             if debug:  print( 'TRYING: ' + n )
@@ -191,11 +202,11 @@ class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
                )
             
     def do_POST(self):
+      if not init_MEM(self): return
       init_MEM(self)
-      if not unmixed(self,'network').serve():
-         return
+      if no_service(): return
       if debug: 
-         print "POST REQUEST PATH:\n  " + self._MEM['path']
+         print "\n\nPOST REQUEST PATH:\n  " + self._MEM['path']
       try:
          for n in self.server.soconsts.postList:
             if debug: print('TRYING ' + n)

@@ -45,6 +45,7 @@ def getResources():
 
    return dict(
      
+      client_ip = handler.client_address[0],
       command = handler.command, 
       path = path,
       pathext = ext,

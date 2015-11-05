@@ -18,8 +18,8 @@ function in the out mixin.
 
 def get():
   if request=='/echo':
-     mixins('jsonCom')  # for spage_out
-          # jsonCom.py is found in expander_mixins
+     mixins('jsonConnect')  # for spage_out
+          # jsonConnect.py is found in expander_mixins
      spage_out(
          title = 'Asynchronous Javascript & JSON Example',
          cssList = _css,
