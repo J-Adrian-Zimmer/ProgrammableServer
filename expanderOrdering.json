@@ -1,1 +1,7 @@
-{"postList": [], "getList": ["first", "second", "serveFiles"], "appDirs": ["C:\\Users\\jaz\\tmp\\App1", "C:\\Users\\jaz\\tmp\\App2"]}
+{
+   "getList" : ["serveFiles"],
+   "postList" : [],
+   "appDirs" : []
+}
+
+

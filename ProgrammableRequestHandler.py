@@ -142,9 +142,12 @@ def mixins(handler,mixin_tuple,where_dict):
 def unmixed(handler,mixinName):
    return Bunch( getMixin(handler,mixinName) )
 
-def no_service():
-   return (localServe and
-           (unmixed('requestInfo').client_ip!='127.0.0.1'
+def no_service(handler):
+   return ( (unmixed(handler,'constants')).
+                                 localServe 
+           and
+           (unmixed(handler,'requestInfo')).
+                      client_ip!='127.0.0.1'
           )
 
 def init_MEM(handler):
@@ -182,7 +185,8 @@ class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
     
     def do_GET(self):
       if not init_MEM(self): return
-      if no_service(): return if debug: 
+      if no_service(self): return 
+      if debug: 
          print "\n\nGET REQUEST PATH:\n   " + self._MEM['path']
       try:
          for n in self.server.soconsts.getList:
@@ -204,7 +208,7 @@ class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
     def do_POST(self):
       if not init_MEM(self): return
       init_MEM(self)
-      if no_service(): return
+      if no_service(self): return
       if debug: 
          print "\n\nPOST REQUEST PATH:\n  " + self._MEM['path']
       try:

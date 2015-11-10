@@ -4,8 +4,8 @@
 '''
 
 def get():
-   if request=='/shutdown': 
-      if (unmixed('network')).me():
+   if request=='/shutdown':
+      if (unmixed('requestInfo')).client_ip=='127.0.0.1':
          (handler.server.soconsts.shutdown)()
          raise Handled()
 
