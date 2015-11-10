@@ -1,0 +1,38 @@
+#left {
+   width:49.5%;
+   display:inline-block;
+   position:absolute;
+   margin:0px;
+   margin-right:40%;
+}
+
+#right {
+   width:49.5%
+   display:inline-block;
+   position:absolute;
+   margin-left:49%;
+   padding:1rem;
+}
+
+
+h1 {
+   font-size:150%;
+   font-weight:600;
+   margin:2px;
+}
+
+table {
+  border-collapse: collapse;
+  margin-left:8px;
+}
+
+td,th {
+  border: 1px solid #999;
+  padding: 0.5rem;
+  text-align: left;
+  width:15rem;
+}
+   
+th {
+   background-color:#F0FFF0;
+}

@@ -34,10 +34,10 @@ def post():
   if request=='/uploadPic':
     mixins('upload')  # for upload_template, upload_ext 
                       # upload_filename, and upload
-    me = unmixed('network').me
+    elsewhere = unmixed('requestInfo').client_ip!='127.0.0.1'
     web_root = unmixed('constants').web_root
 
-    if not me():
+    if elsewhere:
        _send_html(
          "Only accepting requests from same computer."
        )

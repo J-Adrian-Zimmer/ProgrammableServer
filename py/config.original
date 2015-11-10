@@ -51,18 +51,6 @@ listDir = True
 
 shutdown = True
 
-## The requestInfo mixin defangs incoming path names 
-## by removiing a double period 
-## after request path has been split into a component
-## array this regex is used to remove most chars 
-## (notice that the listed chars are those to be kept)
-
-drop_regex = r'[^A-Za-z0-9_\-\.]' 
-
-## Keep in mind that this Python 2.7 is running with 
-## Latin-1 chars whereas incoming and outgoing data
-## are utf-8 encoded.
-
 
 ############################################################
 

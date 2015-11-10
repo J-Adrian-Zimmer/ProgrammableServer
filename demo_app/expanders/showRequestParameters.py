@@ -12,9 +12,9 @@ def get():
          'out'    # for send
       )  # requestInfo and out are found in expander_mixins
 
-      def dictDisplayer( buildme, item ):
+      def dictDisplayer( buildme, pair ):
           return buildme + ( 
-              "<tr><td>%s</td><td>%s</td></tr>" % item
+              "<tr><td>%s</td><td>%s</td></tr>" % pair
           )
 
       html = html_template % dict(

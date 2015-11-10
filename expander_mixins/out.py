@@ -24,7 +24,6 @@ The out mixin provides
   
       these are put into a page template that includes
         jQuery as defined in config.py
-
 '''
 
 from urlparse import urlparse
@@ -92,11 +91,16 @@ def _send_(  status, headers, contents ):
    raise Handled()
  
 def _giveup_(  who, status, message ):
+   print 'FOUR'
    import sys
-   handler.send_error( status, message )
    sys.stderr.write(
       who + ' giving up!\n  ' + message +'\n'
    )
+   print(
+      who + ' giving up!\n  ' + message +'\n'
+   )
+   handler.send_error( status, message )
+   print 'FOUR AGAIN'
    raise Handled()
 
 

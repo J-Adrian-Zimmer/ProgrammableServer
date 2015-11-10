@@ -1,45 +1,63 @@
-def ext2mime(afile):
+def mime_length(afile):
+   from os.path import splitext
    mtype = handler.extensions_map[
                splitext(afile)[1].lower()
            ]
-   print '## ext2mime#' + mtype + '#'
    if mtype[:24]=='application/octet-stream':
       (unmixed('out')).giveup(
-        'staticResponse.sendPublic',
+        'fileTools.mime_length',
         415, 
         "Unrecognized extension" 
       )
-   return mtype
-
-def readUtf8(absPath):
    try:
-      from codecs import open
-      with open(absPath,'r','utf-8') as fi:
-          return fi.read()
-   except:
+     from os import stat
+     ln = stat(afile).st_size
+   except:  
       (unmixed('out')).giveup(
-             'fileTools.readUtf8',
-             500,
-             'Disc read error'
+        'fileTools.mime_length',
+        415, 
+        "Unrecognized file: " + afile
       )
-              
+   return (mtype,ln)
 
-def readBinary(absPath):
+
+def read(absPath):
    try:
       with open(absPath,'rb') as fi:
           return fi.read()
    except:
       (unmixed('out')).giveup(
-             'fileTools.readBinary',
+             'fileTools.read',
              500,
-             'Disc read error'
+             'File read error'
       )
 
-def pathSearch(partialPath):
-  from os.path import exists
-  for d in handler._MEM['earlyAPPS']:
-     fp = normpath(join( d, partialpath ) )
-     if exists(fp): return fp
-  return None
+def search(partialPath):
+   from os.path import exists
+   for d in handler._MEM['earlyApps']:
+     fp = d +partialPath
+     if exists(fp):
+        return fp
+   (unmixed('out')).giveup(
+          'fileTools.search',
+          500,
+          'Could not find or read: ' + partialPath
+   )
 
+def file_out( absoluteName ):
+  ct,cl = mime_length(absoluteName)
+  (unmixed('out')).send(
+    200,
+    { 'content-type': ct,
+      'content-length': cl
+    },
+    read( absoluteName )
+  )
 
+def getResources():
+  return dict(
+     search = search,
+     read = read,
+     mime_length = mime_length,
+     file_out = file_out
+  )
