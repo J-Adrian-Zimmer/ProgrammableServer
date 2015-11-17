@@ -1,5 +1,7 @@
 # ProgrammableServer
 
+(This will be upgraded to the version in develop Very Soon Now. See the README.md for an overview of what's coming.)
+
 If you are a Python programmer wanting to set up a server for your
 own application,  if you don't need a high volume, general purpose
 server and are put off by the complexities of Apache and
