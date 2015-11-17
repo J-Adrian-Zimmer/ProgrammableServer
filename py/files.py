@@ -46,6 +46,7 @@ def tobytes(obj):
     else:
         return obj
 
+
 class ToObj:
    def __init__(self,dicti):
        self.__dict__.update(dicti)

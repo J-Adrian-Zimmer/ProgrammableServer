@@ -7,9 +7,9 @@ def get():
    if request=='/about':
       from os.path import join, normpath
       afile = normpath(join( 
-                 (unmixed('constants')).server_dir,
-                      # unmixed returns the constants
-                      # expander mixin
+                 (unmixed('localInfo')).server_dir,
+                      # thisi unmixed returns the 
+                      # localInfo expander mixin
                  'demo_app',
                  'about_demo.body'
                       # our convention is that .htm 
@@ -28,3 +28,4 @@ def get():
         # an object
         # page_out sends a page and raises Handled
         # so no more expanders will execute
+      raw_input('STARTING requestInfo')

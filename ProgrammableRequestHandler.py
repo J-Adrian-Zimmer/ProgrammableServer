@@ -19,8 +19,10 @@ import imp                     # need to import modules
                                # from string names
 from SimpleHTTPServer import SimpleHTTPRequestHandler
                                # extending this
-from os import               listdir
+from os import               listdir,chdir
                                # for findng expander_mixins
+                               # and altering cur dir for
+                               # SimpleHTTPRequestHandler
 from os.path import          basename,join,dirname,split
                                # do path manipulation
 from urllib import unquote     # handler.path unquoted
@@ -33,6 +35,7 @@ _okpath1 = r'(/[\w\d\-]+)*'
 _okpath2 = r'(/([\w\d]\.|[\w\d\-])*$)'
 okpath = compile(_okpath1+_okpath2)
 
+now = False
 class Bunch:
    '''
    The Bunch class makes a Python class from a dict
@@ -40,7 +43,7 @@ class Bunch:
    '''
    def __init__(self, adict):
         self.__dict__.update(adict)
-
+            
 def giveup( handler, who, status, message, raiseHandled=True ):
    # reports error to browser and console
    msg = who + ' giving up!\n  |' + message + '|'
@@ -56,23 +59,28 @@ def load_mod( handler, namepy, which ):
    # adds functions to its namespace
    name = namepy[:-3] 
    appDirs = handler.server.soconsts.appDirs
-   dirs = map( 
-            lambda d: join(d,which),
-            handler._MEM['earlyApps']
-          )
-   if debug:
-      print name + ' IN? ' + ':'.join( dirs )
+   try:
+      dirs = map( 
+               lambda d: join(d,which),
+               handler._MEM['earlyApps']
+             )
+      if debug:
+         print namepy + ' IN? ' + ';'.join(dirs)
+   except:
+      giveup(
+         handler,
+         "ProgrammableHandler.load_mod",
+         500,
+         "cannot find " + namepy
+      )
    try:
       fp, pathname, description = imp.find_module(
                          name,
                          dirs 
                       )
-      try:
-          m = imp.load_module(
-                     name, fp, pathname, description
-                 )
-      finally:
-          if fp: fp.close()
+      m = imp.load_module(
+                 name, fp, pathname, description
+          )
    except:
       giveup(
         handler,
@@ -80,8 +88,14 @@ def load_mod( handler, namepy, which ):
          500, 
         'could not load ' + namepy,
       )
+   finally:
+      try:
+        fp.close()
+      except:
+        pass
+
    try:
-      if which=='expanders':
+      if which=='expanders' and handler.command=='GET':
          i = appDirs.index( 
             dirname(dirname(m.__file__)) 
          )
@@ -108,8 +122,9 @@ def load_mod( handler, namepy, which ):
    return m
 
 def loadExpander(handler, expander_name ):
-   handler._MEM['earlyApps'] = \
-      handler.server.soconsts.appDirs
+   if handler.command=='GET':
+      handler._MEM['earlyApps'] = \
+         handler.server.soconsts.appDirs
    m = load_mod(
               handler, 
               expander_name+".py", 
@@ -118,10 +133,11 @@ def loadExpander(handler, expander_name ):
    return m
 
 def getMixin(handler, mixin_name):
+   global now
    mix = handler._MEM['mixin']
    if mix.has_key(mixin_name):
       resources = mix[mixin_name]
-      print '..fetched mixin: ' + mixin_name
+      if debug: print '..fetched mixin: ' + mixin_name
    else:
       m = load_mod(
                  handler, 
@@ -143,11 +159,9 @@ def unmixed(handler,mixinName):
    return Bunch( getMixin(handler,mixinName) )
 
 def no_service(handler):
-   return ( (unmixed(handler,'constants')).
-                                 localServe 
-           and
-           (unmixed(handler,'requestInfo')).
-                      client_ip!='127.0.0.1'
+   return ( handler.server.soconsts.localServe 
+            and
+            handler.client_address[0]!='127.0.0.1'
           )
 
 def init_MEM(handler):
@@ -187,12 +201,22 @@ class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
       if not init_MEM(self): return
       if no_service(self): return 
       if debug: 
-         print "\n\nGET REQUEST PATH:\n   " + self._MEM['path']
+         print "\n\n............................................."
+         print "GET REQUEST PATH:\n   " + self._MEM['path']
       try:
          for n in self.server.soconsts.getList:
             if debug:  print( 'TRYING: ' + n )
             loadExpander(self,n).get()
-         if debug:  print('Starting SimpleHTTPRequestHandler')
+         if self.path[:7]=='/public':
+            ## /public is signal to use server's public
+            ## directory
+            wroot = self.server.soconsts.server_dir
+         else:
+            wroot =self.server.soconsts.web_root
+         if debug:  print(
+            'Starting SimpleHTTPRequestself @ '+wroot
+         )
+         chdir(wroot)
          SimpleHTTPRequestHandler.do_GET(self)
       except self.server.soconsts.Handled:
          pass  # Handled means browser and (if necessary)
@@ -210,7 +234,8 @@ class ProgrammableRequestHandler(SimpleHTTPRequestHandler):
       init_MEM(self)
       if no_service(self): return
       if debug: 
-         print "\n\nPOST REQUEST PATH:\n  " + self._MEM['path']
+         print "\n\n............................................."
+         print "POST REQUEST PATH:\n  " + self._MEM['path']
       try:
          for n in self.server.soconsts.postList:
             if debug: print('TRYING ' + n)

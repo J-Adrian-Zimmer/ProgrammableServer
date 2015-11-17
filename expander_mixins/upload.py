@@ -11,7 +11,7 @@ are provided
 
   upload  --  writes the uploaded file; single argument
               is an absolute file name to write to
-  upload_file -- basename of the client's uploaded file
+  upload_filename -- basename of the client's uploaded file
   upload_ext  -- extension of the client's uploaded file
                  (extension also included in the basename)
 
@@ -52,7 +52,7 @@ def _get_upload_info():
     )
 
 def _upload_(upfile,writefilename): 
-  try: 
+  try:  
     with open(writefilename, 'wb') as fo:
        while True:
           chunk = upfile.file.read(8192)
@@ -85,7 +85,7 @@ def getResources():
 
 template = """
 <form id="%s" action="%s" method="POST" enctype="multipart/form-data">
-<input type="file" name="upfile"> <input type="submit" value="upload">
+<input type="file" name="upfile"> <input type="submit" value="submit_upload">
 </form>
 """
 

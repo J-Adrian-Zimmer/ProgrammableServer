@@ -1,0 +1,21 @@
+body {
+   background:black;
+   color:white;
+}
+h1 {
+   width:400px;
+}
+#info {
+   margin:6px;
+   width:400px;
+}
+#buttons {
+   float:none;
+   width:400px;
+   margin:6px;
+}
+#theform {
+   float:none;
+   width:400px;
+   margin:6px;
+}

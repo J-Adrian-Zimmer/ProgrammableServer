@@ -33,10 +33,11 @@ else:
 
 
 ## web_root is the root of the directory tree from which
-## SimpleHTTPServer will serve -- it must be 'public'
-## or the absolute path name of a directory.  Windows
-## users: use '/' instead of '\' when writing the 
-## absolute path name.  
+## SimpleHTTPServer will serve static files;
+## web_root must be 'public' or the path of a directory;
+## the path can be absolute or relative to the server's
+## directory;
+## Windows users: use '/' instead of '\'.
 
 web_root = 'public'
 
@@ -50,7 +51,6 @@ listDir = True
 ## this controls whether the shutdown command will work 
 
 shutdown = True
-
 
 ############################################################
 

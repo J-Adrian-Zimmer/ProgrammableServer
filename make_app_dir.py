@@ -38,7 +38,6 @@ os.mkdir( join(theDir,"expanders") )
 os.mkdir( join(theDir,"expander_mixins") )
 os.mkdir( join(theDir,"css") )
 os.mkdir( join(theDir,"js") )
-os.mkdir( join(theDir,"static") )
 
 ## add a few files ##
 

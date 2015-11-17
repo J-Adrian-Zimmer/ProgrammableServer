@@ -16,10 +16,11 @@ install apps by running install.py from
 ## imports ##
 
 import os,sys
+join = os.path.join
 from BaseHTTPServer import HTTPServer
 from ProgrammableRequestHandler import \
      ProgrammableRequestHandler
-join = os.path.join
+import config
 
 class Handled (Exception): pass
     # this exception stops ProgrammableRequestHandler
@@ -32,23 +33,10 @@ class makeObj:
         self.__dict__.update(**kwds)
 
 def get_constants():
-  import files, config
+  import files
 
   jsobj = files.readJSON('expanderOrdering.json')
 
-  ## assign web_root
-
-  if ( config.web_root=='public' ):
-    web_root = os.path.normpath(
-                     join( serverRoot, 'public')
-               )
-  elif( os.path.isdir(config.web_root) ):
-    web_root = os.path.normpath(config.web_root)
-  else:
-    raise Exception( 
-     "web_root must be 'public' or abs path of a " +
-     "directory\n check your config.py file"
-    )
 
   ## adjust appDirs
 
@@ -69,8 +57,8 @@ def get_constants():
      localServe = config.localServe,
      port = config.port,
      jquery = config.jquery,
-    
-     web_root= web_root,
+     web_root = None,
+     set_web_root = setNewRoot,
      server_dir = serverRoot,
    
      getList = jsobj.getList,
@@ -79,7 +67,34 @@ def get_constants():
 
   )
   
+def setNewRoot(new_path,obj):
+   join = os.path.join
+   isdir = os.path.isdir
+   norm = os.path.normpath
+  
+   # if it's a dir accept it
+   if isdir(new_path):
+      obj.web_root = new_path
+      return
+   # if its public make it the server's directory 
+   elif new_path=='public':
+      obj.web_root = join( serverRoot, 'public')
+      return
 
+   # if it is relative attach it to the server's dir
+   elif new_path[:3]=='../':
+      apath = norm( join(server_dir, new_path ) )
+      if os.path.isdir(apath): 
+         obj.web_root = apath
+      return
+
+   # it ain't right
+   raise Exception( 
+     "web_root must be 'public', the path of a " +
+     "directory relative to the server's " +
+     " directory or abs path of a directory"
+   )
+   
 def check_where_we_are():
    fs = os.listdir(serverRoot)
    if not( 'ProgrammableRequestHandler.py' in fs and
@@ -118,7 +133,7 @@ sys.path.append(join(serverRoot,'py') )
 #    after we have a server.
 
 consts = get_constants()
-
+setNewRoot(config.web_root,consts)
 
 ## setup server ##
  
