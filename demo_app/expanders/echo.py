@@ -23,7 +23,7 @@ def get():
      spage_out(
          title = 'Asynchronous Javascript & JSON Example',
          cssList = _css,
-         other_part = _javascript,  
+         other_head = _javascript,  
                       # happens to be inline Javascript
          body = body
      )

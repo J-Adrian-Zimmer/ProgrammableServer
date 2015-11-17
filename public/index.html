@@ -13,11 +13,10 @@ Server</a> is Python-based and bare bones.  It is made to have apps plugged into
 <p>Here is a list of what is possible without any apps or customization:</p>
 <ol>
 <li>Get this screen by entering the abbreviated URL
-<code>localhost</code> in your browser.  (The URL
-<code>localhost/about</code> will work as well.) </li>
+<code>localhost</code> in your browser.  </li>
 <li>Shut the server down by entering <code>localhost/shutdown</code>
 in your browser.</li>
-<li>See a bird picture by entering <code>localhost/media/wetBird.JPG</code> in your browser.</li>
+<li>See a bird picture by entering <code>localhost/media/Foliage.jpg</code> in your browser.</li>
 <li>See a listing of what is in the <code>media</code> directory by
 entering <code>localhost/media</code>.</li>
 <li>Add other things to the <code>public</code> subdirectory so you can see them the way you&#39;ve seen the bird picture.</li>
@@ -54,24 +53,6 @@ editing the <code>config.py</code> file and restarting the server.  Comments
 in <code>config.py</code> explain the many possibilities.  Two examples are:
 </p>
 <ol>
-<li>
-<p>
-Search for
-<code>web_root</code> in <code>config.py</code> and set it to a
-different directory.  This directory will become the root of your
-static file service.  Unless this directory has a
-<code>index.html</code> file, requesting <code>localhost</code> will
-now produce a listing of files in the directory. 
-</p>
-<p>
-The default value of <code>web_root</code> is
-<code>public</code> which the server sees as a keyword telling it to
-use the default <code>public</code> subdirectory.  When you replace
-<code>public</code> be sure to use a full path name.  This  path
-name can point to anyplace on your computer you have permission to
-read.
-</p>
-</li>
 <li><p>
 The original configuration only allows access from
 browsers on the same computer as the server.
@@ -84,6 +65,10 @@ Note that when you enable requests from browsers on other computers,
 the <code>shutdown</code> request will still only work with
 <code>localhost</code>.</p>
 </li>
+<li><p>
+You can change the port the server listens on by resetting the
+<code>port</code> parameter.
+</p></li>
 </ol>
 </div>
 <div style="width:39%; float:right;"> <p style="width:100%; margin-top:40px;

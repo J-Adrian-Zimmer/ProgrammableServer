@@ -1,7 +1,7 @@
 '''
 The requestInfo mixin provides
 
-   command --  GET, POST, HEAD 
+   command --  eET, POST, HEAD 
    path -- an array containing the parts of the 
            url path
    pathext -- the extension found in the path without the .
@@ -9,6 +9,8 @@ The requestInfo mixin provides
    url_query -- the query part of the url (after the ?), 
                 parsed as a dict
    headers -- http headers from request
+   client_ip -- the ip that the browser request seems
+                to come from
 
 Note:
  -- the unprocessed url path (sans query & fragment)
@@ -22,13 +24,12 @@ Note:
 '''
 
 from os.path        import splitext
-from urlparse       import parse_qs 
-
-from urllib import unquote
 
 
 def getResources():
-   query = handler._MEM['query']
+   from urlparse    import parse_qs 
+   from urllib      import unquote
+   query = parse_qs(handler._MEM['query'])
 
    path = filter(
               lambda x: x!='',
@@ -44,13 +45,10 @@ def getResources():
 
 
    return dict(
-     
       client_ip = handler.client_address[0],
       command = handler.command, 
       path = path,
       pathext = ext,
-      url_query = parse_qs(query),
+      url_query = query,
       headers = handler._MEM['headers']
-   
    )
-

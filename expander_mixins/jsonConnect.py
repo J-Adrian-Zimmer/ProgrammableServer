@@ -12,7 +12,7 @@
       spage_out -- like out's page_out but adds 
                  Javascript for sending a JSONable
                  Javascript object via Ajax
-      giveup -- the give from the out mixin
+      giveup -- the giveup from the out mixin
 '''
 
 import os, json
@@ -54,11 +54,11 @@ def getResources():
       title='anonymous',
       jsList=[],
       cssList=[],
-      other_part='',
+      other_head='',
       body=''
    ):
       jsList = jsList + ["support.js"]
-      page_out( title, jsList, cssList, other_part, body ) 
+      page_out( title, jsList, cssList, other_head, body ) 
 
    return dict(
       jsonIn = jsonIn,

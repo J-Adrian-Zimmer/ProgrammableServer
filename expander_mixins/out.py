@@ -45,7 +45,7 @@ def _page_out(
       body = ''
 ):
    # set Javascript links, starting with jquery
-   jq = (unmixed('constants')).jquery
+   jq = (unmixed('localInfo')).jquery
    js = ( _js_template_foreign % jq  
                       if jq[0:4]=='http' 
                       else _js_template % jq )
@@ -91,7 +91,6 @@ def _send_(  status, headers, contents ):
    raise Handled()
  
 def _giveup_(  who, status, message ):
-   print 'FOUR'
    import sys
    sys.stderr.write(
       who + ' giving up!\n  ' + message +'\n'
@@ -100,7 +99,6 @@ def _giveup_(  who, status, message ):
       who + ' giving up!\n  ' + message +'\n'
    )
    handler.send_error( status, message )
-   print 'FOUR AGAIN'
    raise Handled()
 
 

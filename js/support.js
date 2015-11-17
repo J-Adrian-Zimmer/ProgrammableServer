@@ -2,12 +2,37 @@ function fixWhiteSpace(txt) {
    return txt.replace(/\s+/,' ')
 }
 
+function alter_css(css_obj) {
+   function apply_css( selector, obj ) {
+      changes = {}
+      $.each(
+         obj, 
+         function(property, value ) {
+            console.log( '!!! ' + property + ',' + value + ' !!!')
+            changes[ property ] =  value 
+         }
+      )
+      $(selector).css(changes)
+   }
+
+   $.each( css_obj, apply_css )
+}
+
+function get_css(filename) {
+   console.log('!!! get_css:' + filename + ": !!!")
+   json_out( 
+       'css_response',
+       { css_path_name: filename },
+       alter_css
+   )
+}
+
 function json_out( 
-       app, // the app doing the sending
-       obj, // obj is javascript object without methods
-       cb   // callback is invoked this way
-            //    cb( obj )
-            // obj is a json object from server
+   app, // responding url
+   obj, // obj is javascript object without methods
+   cb   // callback is invoked this way
+        //    cb( obj )
+        // obj is a json object from server
 ){
 
  $.ajax(
@@ -18,12 +43,7 @@ function json_out(
      }).done( function(data) {
           cb( JSON.parse(data) )
      }).fail( function(data) {
-          var obj = JSON.parse(
-                    fixWhiteSpace(data.responseText) );
-          $('body').html(obj.body);
-          $('head').append(obj.css);
-          $('head > title').replaceWith(obj.title);
-          $('body').html(obj.body);
+          $('body').html(data.responseText)
      })
 
 } // no return value, no wait

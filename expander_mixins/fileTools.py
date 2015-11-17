@@ -1,22 +1,22 @@
 def mime_length(afile):
-   from os.path import splitext
+   from os.path import splitext,join
+   from os import stat
    mtype = handler.extensions_map[
                splitext(afile)[1].lower()
            ]
-   if mtype[:24]=='application/octet-stream':
-      (unmixed('out')).giveup(
-        'fileTools.mime_length',
-        415, 
-        "Unrecognized extension" 
-      )
    try:
-     from os import stat
-     ln = stat(afile).st_size
+      ln = stat(afile).st_size
    except:  
       (unmixed('out')).giveup(
         'fileTools.mime_length',
-        415, 
-        "Unrecognized file: " + afile
+        500, 
+        "Unrecognized internal file: " + afile
+      )
+   if mtype[:24]=='application/octet-stream':
+      (unmixed('out')).giveup(
+        'fileTools.mime_length',
+        500, 
+        "Unrecognized extension of internal file: "+afile
       )
    return (mtype,ln)
 
@@ -33,10 +33,12 @@ def read(absPath):
       )
 
 def search(partialPath):
-   from os.path import exists
-   for d in handler._MEM['earlyApps']:
-     fp = d +partialPath
-     if exists(fp):
+   if partialPath[0] in ['/','\\']: 
+      partialPath = partialPath[1:]
+   from os.path import exists,join
+   for d in handler.server.soconsts.appDirs:
+     fp = join(d,partialPath)
+     if exists(fp): 
         return fp
    (unmixed('out')).giveup(
           'fileTools.search',

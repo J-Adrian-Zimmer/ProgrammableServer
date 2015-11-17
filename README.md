@@ -1,18 +1,22 @@
 # ProgrammableServer
 
-If you are a Python programmer wanting to set up a server for your
-own application,  if you don't need a high volume, general purpose
-server and are put off by the complexities of Apache and
-BaseHTTPServer, then ProgrammableServer may be for you.  It is easy
-to setup and, if necessary, reconfigure.
+If you are a Python programmer 
 
-With ProgrammableServer, you can create a simple or complex
-application whose demands on a web server are few.  You do this by
+1. who wants to set up a server for your own applications,  
+
+1. who doesn't need a high volume, general purpose server, and 
+
+1. who is put off by the complexities of Apache and Python's
+SimpleHTtPserver
+
+then the ProgrammableServer may be for you.  It is easy
+to setup and to write applications for.
+
+With ProgrammableServer you can create a simple or complex
+application provided the demands on a web server are few.  You do this by
 writing one or more *expanders* each of which handles a single kind
-of request.  Writing an expander is made easier because you have a
-choice of mixins to include.  An expander mixin consists of a few
-functions that provide an environment customized to your needs.
-
+of request. 
+ 
 Web servers send browser requests to handlers for processing.  The
 ProgrammableServer's handler expects each expander to look over
 a request and then to do one of three things:
@@ -27,120 +31,85 @@ down in your list of expanders are ignored.
 If the expander list is exhausted without handling the request, then
 what happens will depend on whether it is a GET or POST request.  If a
 GET request then Python's SimpleHTTPRequestHandler takes over to
-serve a file from the directory tree determined in the configuration
+serve a file from the directory tree that is determined in the configuration
 file `config.py`.  If a POST request then a "not found" message is
 sent.
 
-The `config.py` file is also used to set up separate expander lists
-for GET and POST requests.
-
-You can set up the ProgrammableServer and run the example expander
-applications this way
+You can set up the ProgrammableServer this way
 
 1. install Python 2.7
 2. download and unzip this application
 3. run serve.py 
 
 If your computer is set to run Python 2.7 on `.py` files, you can
-just click on `serve.py`.  By default it will run with `localServe` set to
-`True` and so will only serve browsers on the same computer.
+just click on `serve.py`.  By default it will only serve browsers on
+the same computer.
 
-The sample applications are
+The `config.py` file allows you to do such things as 
 
-**shutdown** (localhost/shutdown)
+1. change the port being listened to
+2. alter the server so it will accept requests from anywhere not
+just from the local machine
+3. change the directory from which static files are served
+4. turn off the feature which lists the contents of directories
 
-> Shuts the server down (only works when `localServe` is `True`)
+The `config.py` file is well commented.  You can start experimenting with
+changes.  Of course the server needs to be restarted with each 
+new round of changes.
 
-**echo** (localhost/echo)
+The server can be halted by requesting this URL
 
-> An example whose source code shows how to set up
-> Ajax/JSON communication with the server.  
+`localhost/shutdown`
 
-**uploadPic** (localhost/uploadPic)
+from a browser on the same computer as the server.
 
-> An example which uploads jpg files;  the target directory is
-> controllable through `config.py`.  The default sets it  to the
-> `uploads` subdirectory of the directory containing `serve.py` 
+The Programmable Server is a skeleton on which applications are
+built.  You cannot do much with a bare bones server that could not
+be done with Python's SimpleHTTPRequestHandler.  To install a
+demonstration application change to the `demo_app` subdirectory and
+run `install.py`.  Then enter this URL 
 
-> As with all these sample expanders, the real value to you from
-this example comes
-> from reading the source code so you will know how to make your
-> own.
+*<domain name or IP number>*/about`
 
-**showRequestParameters** (localhost/showRequestParameters...)
+Of course, if you haven't edited the `config.py` file the URL must
+be
 
-> An investigating application that shows the request path, a table of HTTP declarations, and a table
-> of query string declarations.  You can expand the URL however you
-> like, for example:  
+`localhost/about`
 
-> `localhost/showRequestParameters/onward?id=myself`
+The included demonstrations are not going to show you whizz-bang
+gotta-have applications.  Their purpose is to explain how you, the
+Python and Javascript programmer, will find your work made easier by
+the Programmable Server.
 
-There are two other sample expanders in the GET list, `send_js_css` and
-`countSimpleServes`, but if you try to get them with your browser you
-will be told "File not Found".   This is because they do their thing
-without actually handling the request and sending something to the
-browser.
+Two capabilities of particular noteworthiness are 
 
-The `send_js_css` expander should appear in the GET list before any
-expander you create.  What it does is serve up your Javascript and
-css pages.  This is necessary because when your expander serves up a
-page, SimpleHTTPRequestHandler will be skipped.  Thus some other
-way to serve Javascript and css files for that page is needed.
+1. the seamless transfer of data between a Javascript object on the
+client and a Python object or dict on the server.  (See the `echo`
+demo.)
 
-The `countSimpleServes` expander is an example of how information
-can be saved in the server state.  Saving information in the server
-state enables information to be saved from one request to another.
-The information saved by `countSimpleServes` is the number of times
-SimpleHTTPRequestHandler has been used to serve a static page since
-the server was started.  This
-information is printed to the console window that pops up when
-`serve.py` runs.
+2. the support for responsive web pages that is provided by a
+Javascript function that fetches a CSS file from the server and
+applies it to the current web page. (See the `uploadPic` demo.)
 
-There are only two expanders in the POST list.  One talks to the `echo`
-page with Ajax/JSON.  The other saves uploaded pictures. 
- 
-When an expander executes, a `using` function is installed into its global
-space.  What `using` does is to allow mixins to be installed
-into local spaces.  The mixins are located in the
-`expander_mixins` directory and are well commented.  You can write
-your own as well.
+This kind of functionality is supported by middleware which exists
+to make expanders easier to write.  This middleware comes in the
+form of *expander mixins* (and a single Javascript support file).
+An expander can choose the mixins whose functions it wants loaded in
+the current namespace.
 
-I am planning a 3 volume set of short, inexpensive ebooks about this software.
-Volume I will be about writing expanders.  Volume II will be about
-writing expander mixins.  Volume III will explain three nontrivial
-applications.  They will be published by Bonsai Reads and they will
-be available
-through Amazon, Apple, Barnes & Noble, and others.
+If the supplied expander mixins do not serve the needs of your
+expanders, you can create your own and place them in applications.
 
-### Rant
+The source code of all the included expanders, expander mixins, and
+Javascript support files is fairly well documented.  These files
+are not long and there are not many more than a dozen of them.  Many of
+you can get up to speed by looking through their source code.
 
-Once upon a time there was a flurry of research into what consituted a good software module and how good software modules should interface with each other.
-
-Then along came object-orientation with promises of encapsulation and inheritance that seemed to make that research obsolete.
-
-The result has not been pretty. An object definition may describe methods for these purposes
-
-- Object creation
-- Object's external interface
-- Object's internal methods
-- Object's abstract internal methods to be defined in subclasses
-- Object's defined abstract methods establishing superclass behavior.
-- Object's redefined methods changing superclass behavior.
-- Callback methods received as parameters.
-
-Other lists of purposes could be compiled but this one makes the point.
-
-The software community's response to this complexity has been to turn to the study of patterns. This has been helpful because a pattern is like a map that helps us understand complex terrain.
-
-However a map does not simplify the terrain.  A pattern can simplify
-the coding process but it does not necessarily simplify the code.  That only
-happens when one takes the time to think about the design.
-
-Python's SimpleHTTPRequestHandler is an example of a class with disparate methods from the class and its superclass. Extending it by subclassing would merely boil this mess over the container of the average mind.
-
-The ProgrammableServer relies on a ProgrammableRequestHandler class
-which is a subclass of SimpleHTTPRequestHandler that hides rather
-than augments its complexity.
+For others there is my forthcoming "A  Python Programmable Web
+Server" ebooklet.  As with my "From Simple I/O to
+Monad Transformers" this ebooklet will be available from Amazon in 
+Kindle format and from many other sources in epub format.
 
 [J Adrian Zimmer](http://www.jazimmer.net)
+
 
