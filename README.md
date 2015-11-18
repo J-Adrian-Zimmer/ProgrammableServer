@@ -69,7 +69,7 @@ be done with Python's SimpleHTTPRequestHandler.  To install a
 demonstration application change to the `demo_app` subdirectory and
 run `install.py`.  Then enter this URL 
 
-*<domain name or IP number>*/about`
+*\<domain name or IP number\>*/about`
 
 Of course, if you haven't edited the `config.py` file the URL must
 be
