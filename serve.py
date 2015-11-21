@@ -57,7 +57,7 @@ def get_constants():
      localServe = config.localServe,
      port = config.port,
      jquery = config.jquery,
-     web_root = None,
+     web_root = 'public',
      set_web_root = setNewRoot,
      server_dir = serverRoot,
    
@@ -72,15 +72,15 @@ def setNewRoot(new_path,obj):
    isdir = os.path.isdir
    norm = os.path.normpath
   
-   # if it's a dir accept it
-   if isdir(new_path):
-      obj.web_root = new_path
-      return
    # if its public make it the server's directory 
-   elif new_path=='public':
+   if new_path=='public':
       obj.web_root = join( serverRoot, 'public')
       return
 
+   # if it's a dir accept it
+   elif isdir(new_path):
+      obj.web_root = new_path
+      return
    # if it is relative attach it to the server's dir
    elif new_path[:3]=='../':
       apath = norm( join(server_dir, new_path ) )

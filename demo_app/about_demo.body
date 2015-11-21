@@ -29,8 +29,14 @@ JSON.</p>
 <li><p><strong>showRequestParameters</strong> which shows
 the various views of a browser request.</p>
 </li>
-<li><p><strong>uploadPic</strong> which uses an HTML form to upload a
-picture.</p>
+<li><p><strong>uploadPic</strong> which permits a picture to be
+uploaded <i>and</i> the page format to be altered between desktop
+and mobile formats.  The point of this demo is to show the
+flexibility of Ajax/JSON browser/server communication.
+
+Also the ease with which you can use that communication through the
+Programmable Server.
+</p>
 </li>
 </ol>
 

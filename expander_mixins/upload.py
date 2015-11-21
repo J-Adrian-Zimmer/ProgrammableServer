@@ -1,24 +1,24 @@
 """
 The upload mixin provides support for uploading files. 
 
-  upload_template -- use to create a from for requesting
-                     the upload; use this way
-                       upload_template%(id,post_expander)
+   upload_template -- names the following boiler plate:
+         
+     <input type="file" id="upload--file-name"> 
+     <button id="upload--submit">submit upload</button>
+         
+     Note: You will need these id's in your expanders!
+           They are immutable because hard coded into
+           support.js as well.
 
 
 If loaded into a POST request environment, three other things
 are provided
 
-  upload  --  writes the uploaded file; single argument
+  upload  --  writes the uploaded file; the single argument
               is an absolute file name to write to
   upload_filename -- basename of the client's uploaded file
   upload_ext  -- extension of the client's uploaded file
                  (extension also included in the basename)
-
-There is little flexibility here.  You must use the file form provided
-by this mixin if the upload process is to work.  However, you can
-control which expander receives the upload and use the form's id
-to create CSS formatting for it.
 
 This mixin makes use of undocumented properties of the FieldStorage
 class in Python's cgi module.  It will be difficult to alter.
@@ -26,9 +26,8 @@ class in Python's cgi module.  It will be difficult to alter.
 
 import os,cgi
 
-_error_msg = """ There has been a problem with the upload mixin.
-Whether the problem was included in the HTML sent to the 
-browser or in the server code is unknown."""
+_error_msg = """ There is a problem with the upload mixin.  Has your tech guy been fooling with upload.py or support.js?  The problem is likely in one of those two places.  Or, maybe it lies in an upgrade to Python.
+"""
 
 def _get_upload_info():
   # parse the upload request 
@@ -44,22 +43,20 @@ def _get_upload_info():
                   handler.headers['Content-Type'],
                }
            )
-    return data['upfile']
+    return data['upload--file-name']
   except:
     # get giveup and apply it
     (unmixed('out')).giveup( 
-        'upload expander', 520, _error_msg
+        'upload expander', 500, _error_msg
     )
 
-def _upload_(upfile,writefilename): 
+def _upload_(cgi_obj,writefilename): 
   try:  
     with open(writefilename, 'wb') as fo:
        while True:
-          chunk = upfile.file.read(8192)
-          if len(chunk) == 0:
-              break
-          else:
-              fo.write(chunk)
+          chunk = cgi_obj.file.read(8192)
+          if len(chunk) == 0:   break 
+          else:                 fo.write(chunk)
        return True
   except Exception as e:
     if os.path.exists(writefilename): os.remove(writefilename)
@@ -81,12 +78,9 @@ def getResources():
       )
 
 
-
-
 template = """
-<form id="%s" action="%s" method="POST" enctype="multipart/form-data">
-<input type="file" name="upfile"> <input type="submit" value="submit_upload">
-</form>
+<input type="file" id="upload--file-name"/> 
+<button id='upload--submit'>submit upload</button>
 """
 
 

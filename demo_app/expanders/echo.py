@@ -6,21 +6,21 @@ When the buttons are clicked, an object with the
 textarea text and a goal ('uppercase' or 'lowercase')
 is sent to the server.
 
-This is possible because the spage_out method formats
+This is possible because the pageOut method formats
 a page which loads a support.js file.  This Javascript
 file has a method json_out that sends a string formated
 as a JSON object to the server using jQuery's support for
 Ajax transfers.
 
-Most of spage_out's behavior comes from the page_out
+Most of this pageOut's behavior comes from the pageOut
 function in the out mixin.
 '''
 
 def get():
   if request=='/echo':
-     mixins('jsonConnect')  # for spage_out
-          # jsonConnect.py is found in expander_mixins
-     spage_out(
+     mixins('connect')  # for pageOut
+          # connect.py is found in expander_mixins
+     pageOut(
          title = 'Asynchronous Javascript & JSON Example',
          cssList = _css,
          other_head = _javascript,  
@@ -60,9 +60,9 @@ _javascript = """
 
 /* 
 this script could have been loaded from a file with
-spage_out's jsList parameter.   Merely showing
+pageOut's jsList parameter.   Merely showing
 another possibility here.   jQuery is loaded automatically
-by both page_out and spage_out.  See the config.py file.
+by both versions of pageOut.  See the config.py file.
 */
 
 function $id(x) {

@@ -1,3 +1,5 @@
+// see support.readme
+
 function fixWhiteSpace(txt) {
    return txt.replace(/\s+/,' ')
 }
@@ -8,7 +10,6 @@ function alter_css(css_obj) {
       $.each(
          obj, 
          function(property, value ) {
-            console.log( '!!! ' + property + ',' + value + ' !!!')
             changes[ property ] =  value 
          }
       )
@@ -19,7 +20,6 @@ function alter_css(css_obj) {
 }
 
 function get_css(filename) {
-   console.log('!!! get_css:' + filename + ": !!!")
    json_out( 
        'css_response',
        { css_path_name: filename },
@@ -27,13 +27,7 @@ function get_css(filename) {
    )
 }
 
-function json_out( 
-   app, // responding url
-   obj, // obj is javascript object without methods
-   cb   // callback is invoked this way
-        //    cb( obj )
-        // obj is a json object from server
-){
+function json_out( app, obj, cb) {
 
  $.ajax(
      { type:'POST',
@@ -46,4 +40,24 @@ function json_out(
           $('body').html(data.responseText)
      })
 
-} // no return value, no wait
+} 
+
+function file_out( app, cb ) {
+   var form = $('#upload--file-name')[0],  // want dom object
+       file = form.files[0],
+       sendable_form = new FormData(),
+       xhr = new XMLHttpRequest();
+   sendable_form.append('upload--file-name',file)
+   $.ajax(
+       { type:'POST',
+         url:app,
+         contentType:false,
+         enctype:'multipart/form-data',
+         processData: false,
+         data: sendable_form
+   }).done( function(data) {
+       cb( JSON.parse(data) )
+   }).fail( function(data) {
+       $('body').html(data.responseText)
+   })
+}

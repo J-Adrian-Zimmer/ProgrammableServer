@@ -24,7 +24,7 @@ NOTICE: Incoming is a Python object whereas outgoing is a
 
 def post():
   if request=='/echoHandler':
-     mixins('jsonConnect')  # for jsonIn and jsonOut
+     mixins('connect')  # for jsonIn and jsonOut
           # jsonCom.py is found in expander_mixins
      jsn = jsonIn()
      if jsn.goal=='uppercase':

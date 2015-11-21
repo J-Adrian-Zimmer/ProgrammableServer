@@ -14,25 +14,22 @@ The out mixin provides
       status -- http status
       message -- error message
 
-   page_out -- creates an html page with these parameters and
-               their defaults
+   pageOut -- creates an html page with these parameters and
+               their defaults; page includes jQuery
       title = 'anonymous'
       jsList = []
       cssList = []
       other_head = ''
       body = ''
   
-      these are put into a page template that includes
-        jQuery as defined in config.py
+   All three send a complete response (e.g. full page).
 '''
-
-from urlparse import urlparse
 
 def getResources():
    return dict( 
       send = _send_,
       giveup = _giveup_,
-      page_out = _page_out
+      pageOut = _page_out
    )
 
 ## helpers ##

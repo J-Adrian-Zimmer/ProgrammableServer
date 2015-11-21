@@ -1,0 +1,70 @@
+The support.js file provides three functions for use communicating
+with the Programmable Web Server.  
+
+These functions are designed to work with the `css2json` expander
+and the `upload` and `connect` expander mixins on the server side.
+All communication involves jQuery's ajax method.  
+
+Except for file uploading, what is sent back and forth is a JSON
+string.
+
+There are of course no return values because these functions are
+applied asynchronously.
+
+
+
+function json_out
+   Converts a JSON-like Javascript object to JSON and sends
+   it to the server using jQuery's ajax method.
+
+   arguments are:
+      
+      app -- the name of the receiving expander
+      obj -- the object to be transmitted
+      cb  -- the callback function to receive the
+             response;  this function's single
+             argument is a Javascript object
+             translated from the received JSON
+             string
+
+   error handling is built in
+
+
+
+function get_css
+   Asks server for a CSS file, asynchronously gets a 
+   Javascript object representing that file, and updates 
+   the page's style with that information.  Talks to the 
+   `css2json` expander.
+
+argument 
+   
+   filename --  a css file name 
+                only the basename will be used 
+                
+   filename is found in the application's css directory 
+   or in a previously installed application's css directory
+
+   error handling is built in
+
+   See py/css_parse.py to understand the limited CSS
+   syntax that is supported.
+
+
+function file_out
+   Uploads a file the user selects with the browser's file
+   select mechanism.  You must arrange for this mechanism
+   by including the upload_template from the `upload` 
+   expander mixin in your HTML.
+
+   arguments are
+      
+      app -- the name of the receiving expander
+      cb  -- the callback function to receive the
+             response;  this function's single
+             argument is a Javascript object
+             translated from the received JSON
+             string
+
+   error handling is built in
+

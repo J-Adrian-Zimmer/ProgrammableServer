@@ -21,11 +21,11 @@ def get():
           # make sure we are sending utf-8
           # even though we are running in Latin-1
           # (see the second line in serve.py)
-      (unmixed('out')).page_out(
+      (unmixed('out')).pageOut(
                body = body,
                title = "Demo of Programmable Server"
       ) # unmixed returns the out expander mixin as 
         # an object
-        # page_out sends a page and raises Handled
+        # pageOut sends a page and raises Handled
         # so no more expanders will execute
       raw_input('STARTING requestInfo')
