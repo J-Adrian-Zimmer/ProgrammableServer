@@ -1,3 +1,29 @@
+'''
+The fileTools mixin contains
+
+    fileOut -- which takes an absolute path name, guesses the
+               mime type of that file from its extension, and
+               sends that file to the browser
+
+    read -- which reads a file in binary mode and returns its
+            contents
+
+    search -- which takes a partial path name beginning (assumed
+              to begin with a subdirectory of the server or any
+              application and searches for it in subdirectories
+              in the appDirs list of expandableOrderings.json
+
+              the search starts with the application whose 
+              expander is currently executing and proceeds 
+              towards the end of appDirs
+
+              if there is no such application, the entire
+              appDirs list is searched
+'''
+
+
+             
+
 def mime_length(afile):
    from os.path import splitext,join
    from os import stat
@@ -45,8 +71,12 @@ def search(partialPath):
           500,
           'Could not find or read: ' + partialPath
    )
+   # Note:  this search is not used to find 
+   # expanders and expander mixins; to see
+   # the code for that look at the load_mod
+   # function in ProgrammableServer
 
-def file_out( absoluteName ):
+def fileOut( absoluteName ):
   ct,cl = mime_length(absoluteName)
   (unmixed('out')).send(
     200,
@@ -61,5 +91,5 @@ def getResources():
      search = search,
      read = read,
      mime_length = mime_length,
-     file_out = file_out
+     fileOut = fileOut
   )
